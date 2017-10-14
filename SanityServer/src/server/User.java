@@ -9,10 +9,10 @@ public class User {
 	String password1;
 	String password2;
 	public User(String userName, String email, String psword, String psword2){
-		username=userName;
+		this.username=userName;
 		this.email=email;
-		password1=psword;
-		password2=psword2;
+		this.password1=psword;
+		this.password2=psword2;
 	}
 	
 	public User(JSONObject JSONMessage){
@@ -21,6 +21,7 @@ public class User {
 			email=JSONMessage.getString("Email");
 			password1=JSONMessage.getString("password1");
 			password2=JSONMessage.getString("password2");
+			//System.out.println("get email"+email);
 		}catch(JSONException e){
 			System.out.println(e.getMessage());
 		}

@@ -12,6 +12,107 @@ import org.json.*;
 
 public class UserDAO {
 	
+	private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
+	private static final String DB_CONNECTION = "jdbc:mysql://127.0.0.1/SanityDB?user=root&password=chenyang&useSSL=false";
+	private static final String DB_USER = "user";
+	private static final String DB_PASSWORD = "password";
+
+	
+	public static JSONObject Register(User u){
+		
+		try{
+			
+			JSONObject message = new JSONObject();
+			message.put("function", "signin");
+			
+			if(checkExisttWithEmail(u.email)){
+				message.put("status", "fail");
+			}
+			else{
+				addUser(u);
+				System.out.println("return false");
+				message.put("status", "success");
+			}
+			
+			return message;
+			
+
+			
+			
+			
+		}catch(SQLException e){
+			System.out.println(e.getMessage());
+		}catch (JSONException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return null;
+		
+		
+	}
+	
+	public static boolean checkExisttWithEmail(String Email) throws SQLException{
+		
+		Connection conn=getDBConnection();
+		PreparedStatement st = conn.prepareStatement("SELECT * FROM SanityDB.User WHERE Email=?");
+		st.setString( 1, Email);
+		try{
+			ResultSet rs = st.executeQuery();
+			
+			System.out.println("check exitst");
+			if(rs.next()){
+				return true;
+			}
+			else{
+				return false;
+			}
+			
+			
+			
+		}catch(SQLException e){
+			System.out.println(e.getMessage());
+		}finally{
+			if (conn != null) {
+				conn.close();
+			}
+			if (st != null) {
+				st.close();
+			}
+		}
+				
+		return true;
+		
+	}
+	
+	
+public static void addUser(User user) throws SQLException{
+	System.out.println("add user");
+		Connection conn=getDBConnection();
+		PreparedStatement st =  
+				conn.prepareStatement("INSERT INTO SanityDB.User (Username, Email, Password1, Password2) VALUE (?,?,?,?)");
+		st.setString( 1, user.username);
+		st.setString( 2, user.email);
+		st.setString( 3, user.password1);
+		st.setString( 4, user.password2);
+		st.execute();
+		try{
+			 st.executeQuery();
+			
+		}catch(SQLException e){
+			System.out.println(e.getMessage());
+		}finally{
+			if (conn != null) {
+				conn.close();
+			}
+			if (st != null) {
+				st.close();
+			}
+		}
+			
+		
+	}
+	
 	/*
 	public static JSONObject Register(JSONObject a){
 		User toadd = new User();
@@ -137,5 +238,25 @@ public class UserDAO {
 		}
 		return toret;
 	}*/
+	
+	
+	private static Connection getDBConnection() {
+
+		Connection dbConnection = null;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println(e.getMessage());
+		}
+		try {
+			dbConnection= DriverManager.getConnection("jdbc:mysql://127.0.0.1/SanityDB?user=root&password=chenyang&useSSL=false");		
+			return dbConnection;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+
+		return dbConnection;
+
+	}
 	
 }
