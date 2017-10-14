@@ -83,8 +83,7 @@ public class Server extends WebSocketServer {
 				 client.add(conn);
 				 broadcast(returnMessage.toString(),client);		 
 			}
-			if(message1.equals("")){	
-				
+			if(message1.equals("login")){	
 			}
 		}catch(JSONException e){
 			System.out.println(e.getMessage());
