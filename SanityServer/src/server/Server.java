@@ -29,13 +29,20 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 
 /**
  * A simple WebSocketServer implementation. Keeps track of a "chatroom".
@@ -64,9 +71,24 @@ public class Server extends WebSocketServer {
 	}
 
 	@Override
-	public void onMessage( WebSocket conn, String message ) {
-		broadcast( message );
-		System.out.println( conn + ": " + message );
+	public void onMessage( WebSocket conn, String message ) {	
+		JSONObject JSONMessage;
+		try{
+			JSONMessage = new JSONObject(message);
+			String message1 = JSONMessage.getString("function");
+			if(message1.equals("Register")){		
+				User user=new User(JSONMessage.getJSONObject("information"));
+				JSONObject returnMessage=UserDAO.Register(user);				 
+				 List<WebSocket> client = new ArrayList<WebSocket>();
+				 client.add(conn);
+				 broadcast(returnMessage.toString(),client);		 
+			}
+			if(message1.equals("")){	
+				
+			}
+		}catch(JSONException e){
+			System.out.println(e.getMessage());
+		}
 	}
 
 	@Override

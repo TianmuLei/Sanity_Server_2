@@ -23,7 +23,7 @@ public class UserDAO {
 		try{
 			
 			JSONObject message = new JSONObject();
-			message.put("function", "signin");
+			message.put("function", "register");
 			
 			if(checkExisttWithEmail(u.email)){
 				message.put("status", "fail");
@@ -84,6 +84,38 @@ public class UserDAO {
 		return true;
 		
 	}
+	
+	
+	public static boolean login(String Email,String ps1,String ps2) throws SQLException{
+		
+		Connection conn=getDBConnection();
+		PreparedStatement st = conn.prepareStatement("SELECT * FROM SanityDB.User WHERE Email=? AND Password1=? AND Password2=?");
+		st.setString( 1, Email);
+		st.setString( 2, ps1);
+		st.setString( 3, ps2);
+		try{
+			ResultSet rs = st.executeQuery();
+			if(rs.next()){
+				return true;
+			}
+			else{
+				return false;
+			}	
+		}catch(SQLException e){
+			System.out.println(e.getMessage());
+		}finally{
+			if (conn != null) {
+				conn.close();
+			}
+			if (st != null) {
+				st.close();
+			}
+		}
+				
+		return true;
+		
+	}
+	
 	
 	
 public static void addUser(User user) throws SQLException{
