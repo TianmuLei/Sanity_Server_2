@@ -53,7 +53,7 @@ public class Server extends WebSocketServer {
 	@Override
 	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
 		broadcast( "new connection: " + handshake.getResourceDescriptor() );
-		broadcast( "MiaoMiaoMiao ");
+		//broadcast( "MiaoMiaoMiao ");
 		System.out.println( conn.getRemoteSocketAddress().getAddress().getHostAddress() + " entered the room!" );
 	}
 
