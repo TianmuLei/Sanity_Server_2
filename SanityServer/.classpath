@@ -11,5 +11,7 @@
 	<classpathentry kind="lib" path="org.springframework.core.jar"/>
 	<classpathentry kind="lib" path="org.springframework.jdbc.jar"/>
 	<classpathentry kind="lib" path="org.springframework.transaction.jar"/>
+	<classpathentry kind="lib" path="json-simple-1.1.jar"/>
+	<classpathentry kind="lib" path="org-apache-commons-logging.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
