@@ -109,8 +109,6 @@ public class UserDAO extends DAO{
 		return true;		
 	}
 	
-	
-	
 	public void addUser(User user) throws SQLException{
 		System.out.println("add user");
 		Connection conn=getDBConnection();

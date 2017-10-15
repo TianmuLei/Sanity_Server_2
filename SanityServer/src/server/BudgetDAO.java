@@ -9,6 +9,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class BudgetDAO extends DAO{
+	CategoryDAO CateDAO;
+	public BudgetDAO(){
+		CateDAO = new CategoryDAO();
+	}
 	public JSONObject createBudget(Budget toAdd){	
 		try{		
 			JSONObject message = new JSONObject();
@@ -18,6 +22,7 @@ public class BudgetDAO extends DAO{
 			}
 			else{
 				addBudgetDB(toAdd);
+				CateDAO.addCategory(toAdd);
 				System.out.println("return success");
 				message.put("status", "success");
 			}	
