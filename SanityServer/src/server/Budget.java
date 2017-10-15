@@ -17,7 +17,7 @@ public class Budget {
 			period=Integer.parseInt(JSONMessage.getString("period"));
 		}catch(JSONException e){
 			System.out.println(e.getMessage());
-			System.out.println("contructing budget");
+			System.out.println("contructing budget Error");
 		}
 	}
 }
