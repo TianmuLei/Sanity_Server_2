@@ -13,10 +13,29 @@ public class BudgetDAO extends DAO{
 	public BudgetDAO(){
 		CateDAO = new CategoryDAO();
 	}
+	public JSONObject editBudget(Budget toEdit, Budget original){
+		try{
+			JSONObject message = new JSONObject();
+			message.put("function", "editBudget");
+			if(editBudgetDB(toEdit,original)){
+				message.put("status", "success");
+			}
+			else{
+				message.put("status", "fail");
+			}
+			
+		}catch(SQLException e){
+			System.out.println(e.getMessage());
+		}catch (JSONException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}	
+		return null;
+	}
 	public JSONObject createBudget(Budget toAdd){	
 		try{
 			JSONObject message = new JSONObject();
-			message.put("function", "createBudget");	
+			message.put("function", "createBudget");// we need give more info to this message	
 			if(checkBudgetExist(toAdd)){
 				message.put("status", "fail");
 			}
@@ -120,5 +139,11 @@ public class BudgetDAO extends DAO{
 				st.close();
 			}
 		}
+	}
+	private Boolean editBudgetDB(Budget toEdit, Budget original) throws SQLException{
+		Connection conn=getDBConnection();
+		PreparedStatement updateStatement = conn.prepareStatement("UPDATE SanityDB.Budget SET Budget_name=?"
+				+ ",User_id=?,Budget_period=?,Start_date=?,Budget_total=?,Budget_spent=?");
+		return false;
 	}
 }
