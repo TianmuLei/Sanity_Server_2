@@ -95,6 +95,25 @@ public class Server extends WebSocketServer {
 		System.out.println( "received fragment: " + fragment );
 	}
 
+	@Override
+	public void onError( WebSocket conn, Exception ex ) {
+		ex.printStackTrace();
+		if( conn != null ) {
+			// some errors like port binding failed may not be assignable to a specific websocket
+		}
+	}
+
+	@Override
+	public void onStart() {
+		System.out.println("Server started!");
+	}
+	
+	private void sendMessagetoClient(WebSocket conn,JSONObject Message){
+		 List<WebSocket> client = new ArrayList<WebSocket>();
+		 client.add(conn);
+		 broadcast(Message.toString(),client);
+	}
+	
 	public static void main( String[] args ) throws InterruptedException , IOException {
 		WebSocketImpl.DEBUG = true;
 		int port = 9999; // 843 flash policy port
@@ -115,24 +134,6 @@ public class Server extends WebSocketServer {
 				break;
 			}
 		}
-	}
-	@Override
-	public void onError( WebSocket conn, Exception ex ) {
-		ex.printStackTrace();
-		if( conn != null ) {
-			// some errors like port binding failed may not be assignable to a specific websocket
-		}
-	}
-
-	@Override
-	public void onStart() {
-		System.out.println("Server started!");
-	}
-	
-	private void sendMessagetoClient(WebSocket conn,JSONObject Message){
-		 List<WebSocket> client = new ArrayList<WebSocket>();
-		 client.add(conn);
-		 broadcast(Message.toString(),client);
 	}
 
 }
