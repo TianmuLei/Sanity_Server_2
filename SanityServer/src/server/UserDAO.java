@@ -12,19 +12,10 @@ import org.json.*;
 
 public class UserDAO {
 	
-	private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
-	private static final String DB_CONNECTION = "jdbc:mysql://127.0.0.1/SanityDB?user=root&password=chenyang&useSSL=false";
-	private static final String DB_USER = "user";
-	private static final String DB_PASSWORD = "password";
-
-	
-	public static JSONObject Register(User u){
-		
-		try{
-			
+	public JSONObject Register(User u){	
+		try{		
 			JSONObject message = new JSONObject();
-			message.put("function", "register");
-			
+			message.put("function", "register");	
 			if(checkExisttWithEmail(u.email)){
 				message.put("status", "fail");
 			}
@@ -32,24 +23,38 @@ public class UserDAO {
 				addUser(u);
 				System.out.println("return false");
 				message.put("status", "success");
-			}
-			
+			}	
 			return message;
-
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
 		}catch (JSONException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
-		}
-		
+		}	
 		return null;
-		
-		
+	}
+	public JSONObject Login(User u){
+		try{		
+			JSONObject message = new JSONObject();
+			message.put("function", "login");	
+			if(verifyPassword(u.email,u.password1,u.password2)){
+				message.put("status", "sucess");
+			}
+			else{
+				System.out.println("return false");
+				message.put("status", "fail");
+			}	
+			return message;
+		}catch(SQLException e){
+			System.out.println(e.getMessage());
+		}catch (JSONException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}	
+		return null;
 	}
 	
-	public static boolean checkExisttWithEmail(String Email) throws SQLException{
-		
+	public boolean checkExisttWithEmail(String Email) throws SQLException{
 		Connection conn=getDBConnection();
 		PreparedStatement st = conn.prepareStatement("SELECT * FROM SanityDB.User WHERE Email=?");
 		st.setString( 1, Email);
@@ -62,10 +67,7 @@ public class UserDAO {
 			}
 			else{
 				return false;
-			}
-			
-			
-			
+			}	
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
 		}finally{
@@ -75,14 +77,11 @@ public class UserDAO {
 			if (st != null) {
 				st.close();
 			}
-		}
-				
-		return true;
-		
+		}				
+		return true;		
 	}
 	
-	
-	public static boolean login(String Email,String ps1,String ps2) throws SQLException{
+	private boolean verifyPassword(String Email,String ps1,String ps2) throws SQLException{
 		
 		Connection conn=getDBConnection();
 		PreparedStatement st = conn.prepareStatement("SELECT * FROM SanityDB.User WHERE Email=? AND Password1=? AND Password2=?");
@@ -107,15 +106,13 @@ public class UserDAO {
 				st.close();
 			}
 		}
-				
-		return true;
-		
+		return true;		
 	}
 	
 	
 	
-public static void addUser(User user) throws SQLException{
-	System.out.println("add user");
+	public void addUser(User user) throws SQLException{
+		System.out.println("add user");
 		Connection conn=getDBConnection();
 		PreparedStatement st =  
 				conn.prepareStatement("INSERT INTO SanityDB.User (Username, Email, Password1, Password2) VALUE (?,?,?,?)");
@@ -125,8 +122,7 @@ public static void addUser(User user) throws SQLException{
 		st.setString( 4, user.password2);
 		st.execute();
 		try{
-			 st.executeQuery();
-			
+			 st.executeQuery();		
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
 		}finally{
@@ -136,140 +132,10 @@ public static void addUser(User user) throws SQLException{
 			if (st != null) {
 				st.close();
 			}
-		}
-			
-		
+		}		
 	}
-	
-	/*
-	public static JSONObject Register(JSONObject a){
-		User toadd = new User();
-		JSONObject toret = new JSONObject();
-		
-		JSONObject arr;
-		try {
-			toadd.setFunc(a.getString("function"));
-			arr = a.getJSONObject("information");
-			toadd.setUsername(arr.getString("username"));
-			toadd.setEmail(arr.getString("Email"));
-			toadd.setPassword1(arr.getString("password1"));
-			toadd.setPassword2(arr.getString("password2"));
-			toret = addUserToDB(toadd);
-			
-		}	
-		 catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return toret;
-	}
-	public static JSONObject login(JSONObject a){
-		User toadd = new User();
-		JSONObject toret = new JSONObject();
-		
-		JSONObject arr;
-		try {
-			toadd.setFunc(a.getString("function"));
-			arr = a.getJSONObject("information");
-			toadd.setUsername(arr.getString("username"));
-			toadd.setPassword1(arr.getString("password1"));
-			toadd.setPassword2(arr.getString("password2"));
-			toadd.setEmail(arr.getString("Email"));
-			
-			toret = addUserToDB(toadd);
-			
-		}	
-		 catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return toret;
-	}
-	public static JSONObject addUserToDB(User toadd){
-		JSONObject toret = new JSONObject ();
-		try{
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1/SanityDB?user=root&password=chenyang&useSSL=false");
-			PreparedStatement st = 
-					conn.prepareStatement("SELECT * FROM SanityDB.User WHERE Email=?");
-			st.setString( 1, toadd.getEmail());
-			System.out.println(st);
 
-			ResultSet rs = st.executeQuery();
-			if(rs.next()){
-				toret.put("function", toadd.getFunc());
-				toret.put("status", "fail");
-				JSONObject info = new JSONObject();
-				info.put("reason", "Username already exist");
-				toret.put("information", info);
-				
-			}
-			ResultSet rs = st.executeQuery();
-			if(rs.next()){
-				toret.put("function", toadd.getFunc());
-				toret.put("status", "fail");
-				JSONObject info = new JSONObject();
-				info.put("reason", "Username already exist");
-				toret.put("information", info);
-				
-			}
-			st = 
-					conn.prepareStatement("INSERT INTO SanityDB.User (Username, Email, Password1, Password2) VALUE ('"+toadd.getUsername()+
-					"','"+toadd.getEmail()+"','"+toadd.getPwd1()+"','"+toadd.getPwd2()+"')");
-			st.execute();
-			toret.put("function", toadd.getFunc());
-			toret.put("status", "success");
-		}
-		catch(SQLException sqle){
-			System.out.println(sqle.getMessage());
-		}
-		catch(ClassNotFoundException cnfe){
-			System.out.println(cnfe.getMessage());
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return toret;
-	}
-	public static JSONObject loginDAO(User toadd){
-		JSONObject toret = new JSONObject ();
-		try{
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1/SanityDB?user=root&password=chenyang&useSSL=false");
-			PreparedStatement st = 
-					
-					conn.prepareStatement("SELECT FROM SanityDB.User WHERE Email = '"+ toadd.getEmail()+"'");
-			ResultSet rs = st.executeQuery();
-			if(rs.next()){
-				toret.put("function", toadd.getFunc());
-				toret.put("status", "fail");
-				JSONObject info = new JSONObject();
-				info.put("reason", "Username already exist");
-				toret.put("information", info);
-				
-			}
-			st = 
-					conn.prepareStatement("INSERT INTO SanityDB.User (Username, Email, Password1, Password2) VALUE ('"+toadd.getUsername()+
-					"','"+toadd.getEmail()+"','"+toadd.getPwd1()+"','"+toadd.getPwd2()+"')");
-			st.execute();
-			toret.put("function", toadd.getFunc());
-			toret.put("status", "success");
-		}
-		catch(SQLException sqle){
-			System.out.println(sqle.getMessage());
-		}
-		catch(ClassNotFoundException cnfe){
-			System.out.println(cnfe.getMessage());
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return toret;
-	}*/
-	
-	
-	private static Connection getDBConnection() {
-
+	Connection getDBConnection() {
 		Connection dbConnection = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -282,9 +148,6 @@ public static void addUser(User user) throws SQLException{
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-
 		return dbConnection;
-
 	}
-	
 }

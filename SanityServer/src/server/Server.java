@@ -30,7 +30,6 @@ import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.java_websocket.WebSocket;
@@ -40,34 +39,34 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
 /**
  * A simple WebSocketServer implementation. Keeps track of a "chatroom".
  */
 public class Server extends WebSocketServer {
+	private UserDAO userDao;
 
 	public Server( int port ) throws UnknownHostException {
 		super( new InetSocketAddress( port ) );
+		userDao = new UserDAO();
 	}
 
 	public Server( InetSocketAddress address ) {
 		super( address );
+		userDao = new UserDAO();
 	}
 
 	@Override
 	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
 		broadcast( "new connection: " + handshake.getResourceDescriptor() );
-		//broadcast( "MiaoMiaoMiao ");
-		System.out.println( conn.getRemoteSocketAddress().getAddress().getHostAddress() + " entered the room!" );
+		System.out.println( conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected!" );
 	}
 
 	@Override
 	public void onClose( WebSocket conn, int code, String reason, boolean remote ) {
-		broadcast( conn + " has left the room!" );
-		System.out.println( conn + " has left the room!" );
+		broadcast( conn + " disconnect" );
+		System.out.println( conn + " disconnect" );
 	}
 
 	@Override
@@ -76,17 +75,15 @@ public class Server extends WebSocketServer {
 		try{
 			JSONMessage = new JSONObject(message);
 			String message1 = JSONMessage.getString("function");
-			if(message1.equals("Register")){		
+			if(message1.equals("register")){		
 				User user=new User(JSONMessage.getJSONObject("information"));
-				JSONObject returnMessage=UserDAO.Register(user);				 
-				 List<WebSocket> client = new ArrayList<WebSocket>();
-				 client.add(conn);
-				 broadcast(returnMessage.toString(),client);		 
+				JSONObject returnMessage=userDao.Register(user);	
+				sendMessagetoClient(conn,returnMessage);
 			}
 			if(message1.equals("login")){	
-				
-				
-				
+				User user = new User(JSONMessage.getJSONObject("information"));
+				JSONObject returnMessage=userDao.Login(user);
+				sendMessagetoClient(conn,returnMessage);
 			}
 		}catch(JSONException e){
 			System.out.println(e.getMessage());
@@ -130,6 +127,12 @@ public class Server extends WebSocketServer {
 	@Override
 	public void onStart() {
 		System.out.println("Server started!");
+	}
+	
+	private void sendMessagetoClient(WebSocket conn,JSONObject Message){
+		 List<WebSocket> client = new ArrayList<WebSocket>();
+		 client.add(conn);
+		 broadcast(Message.toString(),client);
 	}
 
 }
