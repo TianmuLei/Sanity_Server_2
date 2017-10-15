@@ -18,7 +18,7 @@ public class User {
 	public User(JSONObject JSONMessage){
 		try{
 			username=JSONMessage.getString("username");
-			email=JSONMessage.getString("Email");
+			email=JSONMessage.getString("email");
 			password1=JSONMessage.getString("password1");
 			password2=JSONMessage.getString("password2");
 			//System.out.println("get email"+email);
