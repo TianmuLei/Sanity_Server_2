@@ -35,11 +35,7 @@ public class UserDAO {
 			}
 			
 			return message;
-			
 
-			
-			
-			
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
 		}catch (JSONException e) {
