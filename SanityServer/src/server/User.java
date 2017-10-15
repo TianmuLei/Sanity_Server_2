@@ -24,7 +24,6 @@ public class User {
 			//System.out.println("get email"+email);
 		}catch(JSONException e){
 			System.out.println(e.getMessage());
-		}
-		
+		}	
 	}
 }

@@ -14,7 +14,7 @@ public class BudgetDAO extends DAO{
 		CateDAO = new CategoryDAO();
 	}
 	public JSONObject createBudget(Budget toAdd){	
-		try{		
+		try{
 			JSONObject message = new JSONObject();
 			message.put("function", "register");	
 			if(checkBudgetExist(toAdd)){

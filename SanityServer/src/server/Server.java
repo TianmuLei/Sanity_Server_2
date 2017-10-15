@@ -46,15 +46,18 @@ import org.json.JSONObject;
  */
 public class Server extends WebSocketServer {
 	private UserDAO userDao;
+	private BudgetDAO budgetDao;
 
 	public Server( int port ) throws UnknownHostException {
 		super( new InetSocketAddress( port ) );
 		userDao = new UserDAO();
+		budgetDao = new BudgetDAO();
 	}
 
 	public Server( InetSocketAddress address ) {
 		super( address );
 		userDao = new UserDAO();
+		budgetDao = new BudgetDAO();
 	}
 
 	@Override
@@ -80,9 +83,14 @@ public class Server extends WebSocketServer {
 				JSONObject returnMessage=userDao.Register(user);	
 				sendMessagetoClient(conn,returnMessage);
 			}
-			if(message1.equals("login")){	
+			else if(message1.equals("login")){	
 				User user = new User(JSONMessage.getJSONObject("information"));
 				JSONObject returnMessage=userDao.Login(user);
+				sendMessagetoClient(conn,returnMessage);
+			}
+			else if(message1.equals("createBudget")){
+				Budget toAdd = new Budget(JSONMessage.getJSONObject("information"));
+				JSONObject returnMessage= budgetDao.createBudget(toAdd);
 				sendMessagetoClient(conn,returnMessage);
 			}
 		}catch(JSONException e){
