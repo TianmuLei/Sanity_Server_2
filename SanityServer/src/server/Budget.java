@@ -16,11 +16,11 @@ public class Budget {
 			email=JSONMessage.getString("email");
 			budgetName=JSONMessage.getString("name");
 			date=JSONMessage.getString("date");
-			period=Integer.parseInt(JSONMessage.getString("period"));
-			budgetTotal= Integer.parseInt(JSONMessage.getString("budgetTotal"));
+			period=JSONMessage.getInt("period");
+			budgetTotal= JSONMessage.getInt("budgetTotal");
 			JSONArray jArray=JSONMessage.getJSONArray("categories");
 			for(int i=0;i<jArray.length();++i){
-				jArray.get(i);
+				categories.add(new Category((JSONObject)jArray.get(i)));//cast object into JSONObject
 			}
 		}catch(JSONException e){
 			System.out.println(e.getMessage());
