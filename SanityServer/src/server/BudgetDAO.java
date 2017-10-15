@@ -22,7 +22,7 @@ public class BudgetDAO extends DAO{
 			}
 			else{
 				addBudgetDB(toAdd);
-				CateDAO.addCategory(toAdd,message);
+				CateDAO.addCategory(toAdd);
 				System.out.println("return success");
 				message.put("status", "success");
 			}	
@@ -89,6 +89,7 @@ public class BudgetDAO extends DAO{
 			ResultSet rs= userStatement.executeQuery();
 			rs.next();
 			user_id=rs.getInt("User_id");
+			toAdd.userId=user_id;
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
 			System.out.println("find user error(add budget)");

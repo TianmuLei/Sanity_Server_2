@@ -11,8 +11,10 @@ public class Budget {
 	Integer period;
 	Integer budgetTotal;
 	ArrayList<Category> categories;
+	Integer userId=-1;
 	public Budget(JSONObject JSONMessage){
 		try{
+			categories = new ArrayList<Category>();
 			email=JSONMessage.getString("email");
 			budgetName=JSONMessage.getString("name");
 			date=JSONMessage.getString("date");

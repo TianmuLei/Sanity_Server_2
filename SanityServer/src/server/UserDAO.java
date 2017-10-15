@@ -120,7 +120,7 @@ public class UserDAO extends DAO{
 		st.setString( 4, user.password2);
 		st.execute();
 		try{
-			 st.executeQuery();		
+			 st.executeUpdate();		
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
 		}finally{

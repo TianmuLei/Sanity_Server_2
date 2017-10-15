@@ -12,6 +12,7 @@ public class Category {
 			limit = JSONMessage.getInt("limit");
 		}catch(JSONException e){
 			System.out.println(e.getMessage());
+			System.out.println("parseJSON error(category constuctor)");
 		}
 	}
 }
