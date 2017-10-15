@@ -93,6 +93,9 @@ public class Server extends WebSocketServer {
 				JSONObject returnMessage= budgetDao.createBudget(toAdd);
 				sendMessagetoClient(conn,returnMessage);
 			}
+			else if (message1.equals("addTransaction")){
+				
+			}
 		}catch(JSONException e){
 			System.out.println(e.getMessage());
 		}
