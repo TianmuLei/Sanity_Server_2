@@ -9,7 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class BudgetDAO extends DAO{
-	public JSONObject addBudget(Budget toAdd){	
+	public JSONObject createBudget(Budget toAdd){	
 		try{		
 			JSONObject message = new JSONObject();
 			message.put("function", "register");	
@@ -17,8 +17,8 @@ public class BudgetDAO extends DAO{
 				message.put("status", "fail");
 			}
 			else{
-				//addUser(u);
-				System.out.println("return false");
+				addBudgetDB(toAdd);
+				System.out.println("return success");
 				message.put("status", "success");
 			}	
 			return message;
@@ -34,7 +34,7 @@ public class BudgetDAO extends DAO{
 	private Boolean checkBudgetExist(Budget toAdd) throws SQLException{
 		Connection conn=getDBConnection();
 		int user_id=-1;
-		PreparedStatement userStatement = conn.prepareStatement("SELECT * FROM SanityDB.User WHERE Email=?");
+		PreparedStatement userStatement = conn.prepareStatement("SELECT * FROM SanityDB.User WHERE Email=? VALUE(?)");
 		userStatement.setString(1, toAdd.email);
 		try{
 			ResultSet rs= userStatement.executeQuery();
@@ -48,13 +48,9 @@ public class BudgetDAO extends DAO{
 			}
 		}
 		PreparedStatement st = conn.prepareStatement("SELECT * FROM SanityDB.Budget WHERE Budget_name=? "
-				+ "AND User_id=? AND Budget_period=? AND Start_date AND Budget_total AND Budget_spent");
+				+ "AND User_id=? VALUE(?,?)");// there cannot be two same name budget
 		st.setString( 1, toAdd.budgetName);
-		st.setInt( 2, user_id);
-		st.setInt( 3, toAdd.period);
-		st.setDate(4, java.sql.Date.valueOf(toAdd.date));
-		st.setInt(5, 0);
-		st.setInt(6, 0);
+		st.setInt(2, user_id);
 		try{
 			ResultSet rs = st.executeQuery();
 			if(rs.next()){
@@ -74,5 +70,30 @@ public class BudgetDAO extends DAO{
 			}
 		}
 		return true;
+	}
+	private void addBudgetDB(Budget toAdd) throws SQLException{
+		System.out.println("add user");
+		Connection conn=getDBConnection();
+		PreparedStatement st =  
+				conn.prepareStatement("INSERT INTO SanityDB.Budget (Budget_name=?, "
+						+ "AND User_id=? AND Budget_period=? AND Start_date=? AND Budget_total=? AND Budget_spent=? VALUE(?,?,?,?,?,?)");
+		st.setString( 1, toAdd.budgetName);
+		st.setString( 2, toAdd.email);
+		st.setInt(3, toAdd.period);
+		st.setDate(4, java.sql.Date.valueOf(toAdd.date));
+		st.setInt(5, toAdd.budgetTotal);
+		st.setInt(6, 0);
+		try{
+			 st.executeQuery();		
+		}catch(SQLException e){
+			System.out.println(e.getMessage());
+		}finally{
+			if (conn != null) {
+				conn.close();
+			}
+			if (st != null) {
+				st.close();
+			}
+		}
 	}
 }
