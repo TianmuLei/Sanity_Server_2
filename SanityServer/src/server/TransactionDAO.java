@@ -13,7 +13,7 @@ public class TransactionDAO extends DAO{
 	public JSONObject createTransaction(Transaction toAdd){	
 		try{
 			JSONObject message = new JSONObject();
-			message.put("function", "createBudget");// we need give more info to this message	
+			message.put("function", "createTransaction");// we need give more info to this message	
 			if(checkTransactionExist(toAdd)){
 				message.put("status", "fail");
 				message.put("detail", "same transaction alrealy exist");
@@ -107,7 +107,7 @@ public class TransactionDAO extends DAO{
 			cate.next();
 			categoryspent=cate.getDouble("Category_spent");
 		}catch(SQLException e){
-			System.out.println("check transaction error ");
+			System.out.println("get budget and category error(update transaction) ");
 		}finally{
 			if(getbudget!=null){
 				getbudget.close();
@@ -126,5 +126,21 @@ public class TransactionDAO extends DAO{
 		updateBudget.setDouble(2, toAdd.budgetID);
 		updateCategory.setDouble(1, categoryspent);
 		updateCategory.setDouble(2, toAdd.categoryID);
+		try{
+			updateBudget.executeUpdate();
+			updateCategory.executeUpdate();
+		}catch(SQLException e){
+			System.out.println("update transaction error");
+		}finally{
+			if(updateBudget!=null){
+				updateBudget.close();
+			}
+			if(updateCategory!=null){
+				updateCategory.close();
+			}
+			if(conn!=null){
+				conn.close();
+			}
+		}
 	}
 }
