@@ -22,7 +22,6 @@ public class TransactionDAO extends DAO{
 			else{
 				addTransactionDB(toAdd);
 				updateDB(toAdd);
-				System.out.println("return success");
 				message.put("status", "success");
 			}	
 			return message;
@@ -65,9 +64,47 @@ public class TransactionDAO extends DAO{
 			returnMessage.put("function", "returnTransactionsList");
 			returnMessage.put("Information", generalInfo);
 		}catch (SQLException e) {
+			System.out.println(e.getMessage());
 			System.out.println("getTrasactions error");
 		}catch(JSONException e){
 			System.out.println("getTransactions error");
+		}
+		return returnMessage;
+	}
+	
+	public JSONObject deleteTransaction(Transaction transaction){
+		JSONObject returnMessage = new JSONObject();
+		try{
+			returnMessage.put("function", "createTransaction");
+			TransactionFindUserID(transaction);
+			TransactionFindBudgetID(transaction);
+			TransactionFindCategoryID(transaction);
+			Connection conn=getDBConnection();
+			PreparedStatement statement= conn.prepareStatement("DELETE FROM SanityDB.Transaction WHERE "
+					+ "Transaction_description=? AND User_id =? AND Transaction_amount=? AND Transaction_date=?"
+					+ "AND Budget_id=? AND Category_id=?");
+			statement.setString(1, transaction.description);
+			statement.setInt(2, transaction.userID);
+			statement.setDouble(3, transaction.amount);
+			statement.setDate(4,java.sql.Date.valueOf(transaction.date));
+			statement.setInt(5, transaction.budgetID);
+			statement.setInt(6, transaction.categoryID);
+			statement.executeUpdate();
+			if(statement!=null){
+				statement.close();
+			}
+			if(conn!=null){
+				conn.close();
+			}
+			transaction.amount =transaction.amount*-1;
+			updateDB(transaction);
+			returnMessage.put("status", "success");
+		}catch(SQLException e){
+			System.out.println(e.getMessage());
+			System.out.println("delete Transaction Error");
+		}catch(JSONException e){
+			System.out.println(e.getMessage());
+			System.out.println("delete Transaction Error");
 		}
 		return returnMessage;
 	}
@@ -95,6 +132,7 @@ public class TransactionDAO extends DAO{
 				return false;
 			}
 		}catch(SQLException e){
+			System.out.println(e.getMessage());
 			System.out.println("check transaction error ");
 		}finally{
 			if(findTransaction!=null){
@@ -181,4 +219,5 @@ public class TransactionDAO extends DAO{
 			}
 		}
 	}
+	
 }

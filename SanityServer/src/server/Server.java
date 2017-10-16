@@ -116,6 +116,11 @@ public class Server extends WebSocketServer {
 				JSONObject returnMessage = transactionDao.getTransactions(user,budget, category);
 				sendMessagetoClient(conn, returnMessage);
 			}
+			else if(message1.equals("deleteTransaction")){
+				Transaction transaction = new Transaction(JSONMessage.getJSONObject("information"));
+				JSONObject returnMessage = transactionDao.deleteTransaction(transaction);
+				sendMessagetoClient(conn, returnMessage);
+			}
 		}catch(JSONException e){
 			System.out.println(e.getMessage());
 		}
