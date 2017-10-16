@@ -32,11 +32,7 @@ public class CategoryDAO extends DAO{
 			Connection conn=getDBConnection();
 			findAllCategory= conn.prepareStatement("SELECT * FROM SanityDB.Category WHERE User_id=? AND Budget_id=?");
 			findAllCategory.setInt(1, user_id);
-			findAllCategory.setInt(2, user_id);
-	
-			
-			
-			
+			findAllCategory.setInt(2, budgetID);
 			ResultSet rs =findAllCategory.executeQuery();
 			while(rs.next()){
 				JSONObject temp = new JSONObject();
@@ -45,14 +41,12 @@ public class CategoryDAO extends DAO{
 				temp.put("categorySpent", rs.getDouble("Category_spent"));
 				Jarray.put(temp);
 			}
-			
 			JSONObject information=new JSONObject();
 			information.put("categoryList", Jarray);
 			information.put("budgetName", budget.budgetName);
 			returnMessage.put("function", "returnCategoryList");
 			returnMessage.put("status", "success");
-			returnMessage.put("information", information);
-			
+			returnMessage.put("information", information);		
 			if (findAllCategory != null) {
 				findAllCategory.close();
 			}
