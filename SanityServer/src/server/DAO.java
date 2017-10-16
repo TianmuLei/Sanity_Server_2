@@ -194,6 +194,7 @@ public class DAO {
 				temp.put("budgetSpent", rs.getDouble("Budget_spent"));
 				temp.put("threshold",rs.getInt("Threshold"));
 				temp.put("frequency", rs.getInt("Frequency"));
+				temp.put("period", rs.getInt("Period"));
 				Jarray.put(temp);
 			}
 		}catch(JSONException e){
