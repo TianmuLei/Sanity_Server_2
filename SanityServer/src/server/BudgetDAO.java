@@ -32,6 +32,28 @@ public class BudgetDAO extends DAO{
 				}
 				budgetJSON.put("categoryList",categoryList);
 			}
+			for(int i=0;i<budgetList.length();++i){
+				JSONObject budgetJSON=budgetList.getJSONObject(i);
+				JSONArray categoryList=budgetJSON.getJSONArray("categoryList");
+				int tranSpent=0;
+				for(int j=0;j<categoryList.length();j++){
+					JSONObject categoryJSON=(JSONObject) categoryList.get(j);
+					JSONArray TransList=categoryJSON.getJSONArray("transactionList");
+					double cateSpent=0;
+					for(int k=0;k<TransList.length();k++){
+						cateSpent+=TransList.getJSONObject(k).getDouble("amount");
+					}
+					categoryJSON.remove("categorySpent");
+					categoryJSON.put("categorySpent",cateSpent);
+					tranSpent+=cateSpent;
+				}
+				budgetJSON.remove("budgetSpent");
+				budgetJSON.put("budgetSpent", tranSpent);
+				
+			}
+			
+			
+			
 			JSONObject info = new JSONObject();
 			info.put("budgetLsit", budgetList);
 			returnMessage.put("function", "returnEverything");

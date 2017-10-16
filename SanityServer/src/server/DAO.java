@@ -191,7 +191,7 @@ public class DAO {
 				temp.put("name", rs.getString("Budget_name"));
 				temp.put("date", rs.getDate("Start_date").toString());
 				temp.put("budgetTotal", rs.getDouble("Budget_total"));
-				temp.put("budgetSpent", rs.getDouble("Budget_spent"));
+				temp.put("budgetSpent",0);
 				temp.put("threshold",rs.getInt("Threshold"));
 				temp.put("frequency", rs.getInt("Frequency"));
 				temp.put("period", rs.getInt("Budget_period"));
@@ -224,7 +224,7 @@ public class DAO {
 				JSONObject temp = new JSONObject();
 				temp.put("name", rs.getString("Category_name"));
 				temp.put("limit", rs.getDouble("Category_total"));
-				temp.put("categorySpent", rs.getDouble("Category_spent"));
+				temp.put("categorySpent",0);
 				temp.put("budgetName", budget.budgetName);
 				temp.put("requestPeriod", budget.requestPeriod);
 				Jarray.put(temp);
