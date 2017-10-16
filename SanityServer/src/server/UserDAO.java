@@ -69,6 +69,7 @@ public class UserDAO extends DAO{
 		try{
 			Connection conn=getDBConnection();
 			PreparedStatement statement= conn.prepareStatement("SELECT * FROM SanityDB.User WHERE Email=?");
+			statement.setString(1, email);
 			ResultSet rs= statement.executeQuery();
 			rs.next();
 			toReturn=rs.getString("Username");
@@ -79,6 +80,7 @@ public class UserDAO extends DAO{
 				conn.close();
 			}
 		}catch(SQLException e){
+			System.out.println(e.getMessage());
 			System.out.println("getUsername Error with email");
 		}
 		return toReturn;
