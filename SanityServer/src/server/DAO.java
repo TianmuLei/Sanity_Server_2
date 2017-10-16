@@ -42,8 +42,10 @@ public class DAO {
 	
 	protected void CategoryFindBudgetID(Budget budget) throws SQLException{
 		Connection conn = getDBConnection();
-		PreparedStatement statement = conn.prepareStatement("SELECT * FROM SanityDB.Budget WHERE Budget_name=?");
+		PreparedStatement statement = conn.prepareStatement("SELECT * FROM SanityDB.Budget WHERE Budget_name=?"
+				+ "AND User_id=?");
 		statement.setString(1, budget.budgetName);
+		statement.setInt(2, budget.userId);
 		try{
 			ResultSet rs = statement.executeQuery();
 			rs.next();
