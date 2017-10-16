@@ -39,6 +39,8 @@ public class UserDAO extends DAO{
 			message.put("function", "login");	
 			if(verifyPassword(u.email,u.password1,u.password2)){
 				message.put("status", "success");
+				String username = getUsername(u.email);
+				message.put("username", username);
 				JSONArray budgetList= getBudgetListDB(u);
 				message.put("budgetList", budgetList);
 			}
@@ -61,6 +63,25 @@ public class UserDAO extends DAO{
 			return false;
 		}
 		return true;
+	}
+	private String getUsername(String email){
+		String toReturn ="";
+		try{
+			Connection conn=getDBConnection();
+			PreparedStatement statement= conn.prepareStatement("SELECT * FROM SanityDB.User WHERE Email=?");
+			ResultSet rs= statement.executeQuery();
+			rs.next();
+			toReturn=rs.getString("Username");
+			if(statement!=null){
+				statement.close();
+			}
+			if(conn!=null){
+				conn.close();
+			}
+		}catch(SQLException e){
+			System.out.println("getUsername Error with email");
+		}
+		return toReturn;
 	}
 	private boolean verifyPassword(String Email,String ps1,String ps2) throws SQLException{
 		Connection conn=getDBConnection();

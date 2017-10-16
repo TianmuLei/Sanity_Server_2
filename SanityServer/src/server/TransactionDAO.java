@@ -5,9 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.management.relation.RoleUnresolved;
-import javax.naming.spi.DirStateFactory.Result;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +39,7 @@ public class TransactionDAO extends DAO{
 		JSONObject returnMessage = new JSONObject();
 		try{
 			category.userID =UserFindUserID(user);
+			budget.userId=category.userID;
 			BudgetFindBudgetID(budget);
 			category.budgetID=budget.budgetId;
 			CategoryFindCategoryID(category);
