@@ -38,6 +38,7 @@ public class BudgetDAO extends DAO{
 			message.put("function", "createBudget");// we need give more info to this message	
 			if(checkBudgetExist(toAdd)){
 				message.put("status", "fail");
+				message.put("detail", "budget with same name already exist");
 			}
 			else{
 				addBudgetDB(toAdd);
@@ -89,13 +90,15 @@ public class BudgetDAO extends DAO{
 		BudgetFindUserID(toAdd);
 		PreparedStatement st =  
 				conn.prepareStatement("INSERT INTO SanityDB.Budget (Budget_name, "
-						+ "User_id,Budget_period,Start_date,Budget_total,Budget_spent) VALUE(?,?,?,?,?,?)");
+						+ "User_id,Budget_period,Start_date,Budget_total,Budget_spent,Frequency, Threshold) VALUE(?,?,?,?,?,?,?,?)");
 		st.setString( 1, toAdd.budgetName);
 		st.setInt( 2, toAdd.userId);
 		st.setInt(3, toAdd.period);
 		st.setDate(4, java.sql.Date.valueOf(toAdd.date));
 		st.setDouble(5, toAdd.budgetTotal);
 		st.setDouble(6, 0);
+		st.setInt(7, toAdd.frequency);
+		st.setInt(8, toAdd.threshold);
 		try{
 			 st.executeUpdate();		
 		}catch(SQLException e){
@@ -112,8 +115,9 @@ public class BudgetDAO extends DAO{
 	}
 	private Boolean editBudgetDB(Budget toEdit, Budget original) throws SQLException{
 		Connection conn=getDBConnection();
+		// find the original budget and then update;
 		PreparedStatement updateStatement = conn.prepareStatement("UPDATE SanityDB.Budget SET Budget_name=?"
-				+ ",User_id=?,Budget_period=?,Start_date=?,Budget_total=?,Budget_spent=?");
+				+ ",User_id=?,Budget_period=?,Start_date=?,Budget_total=?,Budget_spent=?,Frequency=?,Threshold=?");
 		return false;
 	}
 }

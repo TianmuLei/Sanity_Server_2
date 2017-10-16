@@ -13,6 +13,8 @@ public class Budget {
 	ArrayList<Category> categories;
 	Integer userId=-1;
 	Integer budgetId=-1;
+	Integer frequency=-1;
+	Integer threshold = -1;
 	public Budget(JSONObject JSONMessage){
 		try{
 			categories = new ArrayList<Category>();
@@ -21,6 +23,8 @@ public class Budget {
 			date=JSONMessage.getString("date");
 			period=JSONMessage.getInt("period");
 			budgetTotal= JSONMessage.getDouble("budgetTotal");
+			frequency = JSONMessage.getInt("frequency");
+			threshold = JSONMessage.getInt("threshold");
 			JSONArray jArray=JSONMessage.getJSONArray("categories");
 			for(int i=0;i<jArray.length();++i){
 				categories.add(new Category((JSONObject)jArray.get(i)));//cast object into JSONObject
