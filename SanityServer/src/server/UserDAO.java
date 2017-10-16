@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -38,6 +39,8 @@ public class UserDAO extends DAO{
 			message.put("function", "login");	
 			if(verifyPassword(u.email,u.password1,u.password2)){
 				message.put("status", "success");
+				JSONArray budgetList= getBudgetListDB(u);
+				message.put("budgetList", budgetList);
 			}
 			else{
 				System.out.println("return false");
@@ -60,7 +63,6 @@ public class UserDAO extends DAO{
 		return true;
 	}
 	private boolean verifyPassword(String Email,String ps1,String ps2) throws SQLException{
-		
 		Connection conn=getDBConnection();
 		PreparedStatement st = conn.prepareStatement("SELECT * FROM SanityDB.User WHERE Email=? AND Password1=? AND Password2=?");
 		st.setString( 1, Email);

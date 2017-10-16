@@ -154,7 +154,7 @@ public class DAO {
 			}
 		}
 	}
-	public JSONArray getBudgetListDB(User user) throws SQLException{
+	protected JSONArray getBudgetListDB(User user) throws SQLException{
 		Connection conn=getDBConnection();
 		PreparedStatement findAllBudget= conn.prepareStatement("SELECT * FROM SanityDB.Budget WHERE User_id=?");
 		Integer userID=-1;
