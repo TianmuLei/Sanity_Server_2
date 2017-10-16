@@ -151,6 +151,7 @@ public class DAO {
 				conn.close();
 			}
 		}catch(SQLException e){
+			System.out.println(e.getMessage());
 			System.out.println("CategoryFindCategory Error");
 		}
 	}
