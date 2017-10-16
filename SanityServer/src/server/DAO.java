@@ -6,6 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class DAO {
 	protected Connection getDBConnection() {
 		Connection dbConnection = null;
@@ -149,5 +153,31 @@ public class DAO {
 				conn.close();
 			}
 		}
+	}
+	public JSONArray getBudgetListDB(User user) throws SQLException{
+		Connection conn=getDBConnection();
+		PreparedStatement findAllBudget= conn.prepareStatement("SELECT * FROM SanityDB.Budget WHERE User_id=?");
+		Integer userID=-1;
+		JSONArray Jarray= new JSONArray();
+		try{
+			userID=UserFindUserID(user);
+			findAllBudget.setInt(1, userID);
+			ResultSet rs =findAllBudget.executeQuery();
+			while(rs.next()){
+				JSONObject temp = new JSONObject();
+				temp.put("name", rs.getString("Budget_name"));
+				temp.put("date", rs.getDate("Start_date").toString());
+				temp.put("budgetTotal", rs.getDouble("Budget_total"));
+				temp.put("budgetSpent", rs.getDouble("Budget_spent"));
+				temp.put("threshold",rs.getInt("Threshold"));
+				temp.put("frequency", rs.getInt("Frequency"));
+				Jarray.put(temp);
+			}
+		}catch(JSONException e){
+			System.out.println("getBudgetListDB error");
+		}catch(SQLException e){
+			System.out.println("getBudgetListDB error");
+		}
+		return Jarray;
 	}
 }
