@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.mysql.jdbc.UpdatableResultSet;
 
 public class TransactionDAO extends DAO{
 	public JSONObject createTransaction(Transaction toAdd){	
