@@ -38,7 +38,7 @@ public class UserDAO extends DAO{
 			JSONObject message = new JSONObject();
 			message.put("function", "login");	
 			if(verifyPassword(u.email,u.password1,u.password2)){
-				message.put("status", "sucess");
+				message.put("status", "success");
 			}
 			else{
 				System.out.println("return false");

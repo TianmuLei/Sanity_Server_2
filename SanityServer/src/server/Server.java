@@ -47,17 +47,20 @@ import org.json.JSONObject;
 public class Server extends WebSocketServer {
 	private UserDAO userDao;
 	private BudgetDAO budgetDao;
+	private TransactionDAO transactionDao;
 
 	public Server( int port ) throws UnknownHostException {
 		super( new InetSocketAddress( port ) );
 		userDao = new UserDAO();
 		budgetDao = new BudgetDAO();
+		transactionDao = new TransactionDAO();
 	}
 
 	public Server( InetSocketAddress address ) {
 		super( address );
 		userDao = new UserDAO();
 		budgetDao = new BudgetDAO();
+		transactionDao = new TransactionDAO();
 	}
 
 	@Override
@@ -94,7 +97,8 @@ public class Server extends WebSocketServer {
 				sendMessagetoClient(conn,returnMessage);
 			}
 			else if (message1.equals("addTransaction")){
-				
+				Transaction toAdd = new Transaction(JSONMessage.getJSONObject("information"));
+				JSONObject returnMessage = transactionDao.createTransaction(toAdd);
 			}
 		}catch(JSONException e){
 			System.out.println(e.getMessage());
