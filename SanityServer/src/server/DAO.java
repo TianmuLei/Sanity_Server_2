@@ -63,7 +63,7 @@ public class DAO {
 		}	
 	}
 	
-	protected void CategoryFindBudgetID(Budget budget) throws SQLException{
+	protected void BudgetFindBudgetID(Budget budget) throws SQLException{
 		Connection conn = getDBConnection();
 		PreparedStatement statement = conn.prepareStatement("SELECT * FROM SanityDB.Budget WHERE Budget_name=?"
 				+ "AND User_id=?");

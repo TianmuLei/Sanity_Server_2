@@ -34,4 +34,9 @@ public class Budget {
 			System.out.println("contructing budget Error");
 		}
 	}
+	
+	public Budget(String name) {
+		budgetName=name;
+		
+	}
 }

@@ -104,6 +104,12 @@ public class Server extends WebSocketServer {
 				JSONObject returnMessage = budgetDao.getBudgetList(user);
 				sendMessagetoClient(conn, returnMessage);
 			}
+			else if(message1.equals("requestBudget")){
+				User user = new User(JSONMessage.getJSONObject("information").getString("email"));
+				Budget budget=new Budget(JSONMessage.getJSONObject("information").getString("name"));
+				JSONObject returnMessage=budgetDao.CateDAO.getCategories(user, budget);
+				sendMessagetoClient(conn, returnMessage);
+			}
 		}catch(JSONException e){
 			System.out.println(e.getMessage());
 		}catch(SQLException e){
