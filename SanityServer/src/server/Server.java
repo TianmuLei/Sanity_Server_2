@@ -112,8 +112,6 @@ public class Server extends WebSocketServer {
 			}
 		}catch(JSONException e){
 			System.out.println(e.getMessage());
-		}catch(SQLException e){
-			System.out.println("requestBudgetList Error OR...");
 		}
 	}
 

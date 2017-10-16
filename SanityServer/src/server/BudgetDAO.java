@@ -15,9 +15,9 @@ public class BudgetDAO extends DAO{
 	public BudgetDAO(){
 		CateDAO = new CategoryDAO();
 	}
-	public JSONObject getBudgetList(User user) throws SQLException{
-		JSONObject information = new JSONObject();
-		JSONObject returnMessage = new JSONObject();
+	public JSONArray getBudgetListArray(User user) throws SQLException{
+		//JSONObject information = new JSONObject();
+		//JSONObject returnMessage = new JSONObject();
 		Connection conn=getDBConnection();
 		PreparedStatement findAllBudget= conn.prepareStatement("SELECT * FROM SanityDB.Budget WHERE User_id=?");
 		Integer userID=-1;
@@ -36,11 +36,12 @@ public class BudgetDAO extends DAO{
 				temp.put("frequency", rs.getInt("Frequency"));
 				Jarray.put(temp);
 			}
+			//return Jarray;
 			
-			information.put("budgetList", Jarray);
-			returnMessage.put("function", "returnBudgetList");
-			returnMessage.put("status", "success");
-			returnMessage.put("information", information);
+			//information.put("budgetList", Jarray);
+			//returnMessage.put("function", "returnBudgetList");
+			//returnMessage.put("status", "success");
+			//returnMessage.put("information", information);
 			
 		}catch(JSONException e){
 			System.out.println("getBudgetList error");
@@ -48,8 +49,36 @@ public class BudgetDAO extends DAO{
 			System.out.println("getBudgetList error");
 		}
 		
-		return returnMessage;
+		return Jarray;
 	}
+	public JSONObject getBudgetList(User user) {
+		JSONObject returnMessage = new JSONObject();
+		try{
+			JSONObject information = new JSONObject();
+			//JSONObject returnMessage = new JSONObject();
+			JSONArray jsonArray=getBudgetListArray(user);
+			
+			information.put("budgetList", jsonArray);
+			returnMessage.put("function", "returnBudgetList");
+			returnMessage.put("status", "success");
+			returnMessage.put("information", information);
+			
+			
+			
+		}catch(SQLException e){
+			System.out.println("getBudgetList error");
+		}catch(JSONException e){
+			System.out.println("getBudgetList error");
+		}
+		return returnMessage;
+	
+		
+		
+		
+		
+	}
+	
+	
 	public JSONObject editBudget(Budget toEdit, Budget original){
 		try{
 			JSONObject message = new JSONObject();
