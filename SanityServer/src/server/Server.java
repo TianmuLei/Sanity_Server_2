@@ -99,6 +99,7 @@ public class Server extends WebSocketServer {
 			else if (message1.equals("addTransaction")){
 				Transaction toAdd = new Transaction(JSONMessage.getJSONObject("information"));
 				JSONObject returnMessage = transactionDao.createTransaction(toAdd);
+				sendMessagetoClient(conn, returnMessage);
 			}
 		}catch(JSONException e){
 			System.out.println(e.getMessage());
