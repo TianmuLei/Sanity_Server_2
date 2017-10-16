@@ -85,7 +85,7 @@ public class DAO {
 		PreparedStatement findBudgetId= conn.prepareStatement("SELECT * FROM SanityDB.Budget WHERE Budget_name=? AND "
 				+ "User_id=?");
 		findBudgetId.setString(1, tran.budget);
-		findBudgetId.setInt(2, tran.userID);
+		findBudgetId.setInt(2, tran.userID);// need to add the user
 		try{
 			ResultSet rs = findBudgetId.executeQuery();
 			rs.next();

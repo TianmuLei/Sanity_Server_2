@@ -15,6 +15,7 @@ public class TransactionDAO extends DAO{
 			message.put("function", "createBudget");// we need give more info to this message	
 			if(checkTransactionExist(toAdd)){
 				message.put("status", "fail");
+				message.put("detail", "same transaction alrealy exist");
 			}
 			else{
 				addTransactionDB(toAdd);
@@ -46,16 +47,29 @@ public class TransactionDAO extends DAO{
 		findTransaction.setInt(5, toAdd.budgetID);
 		findTransaction.setInt(6, toAdd.categoryID);
 		try{
-			
+			ResultSet rs = findTransaction.executeQuery();
+			if(rs.next()){
+				return false;
+			}
+			else{
+				return true;
+			}
 		}catch(SQLException e){
-			
+			System.out.println("check transaction error ");
+		}finally{
+			if(findTransaction!=null){
+				findTransaction.close();
+			}
+			if(conn!=null){
+				conn.close();
+			}
 		}
 		return false;
-	}
-	
-
-	
-	private void addTransactionDB(Transaction toAdd){
-		
+	}	
+	private void addTransactionDB(Transaction toAdd) throws SQLException{
+		Connection conn= getDBConnection();
+		PreparedStatement insert = conn.prepareStatement("INSERT INTO SanityDB.Transaction (Transaction_description, "
+				+ "User_id, Transaction_amount, Transaction_date,Budget_id,Category_id) VALUE (?,?,?,?,?,?)");
+		insert.
 	}
 }
