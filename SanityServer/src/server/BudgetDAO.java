@@ -18,18 +18,19 @@ public class BudgetDAO extends DAO{
 		JSONObject returnMessage = new JSONObject();
 		try{
 			JSONArray budgetList=getBudgetListDB(user);
+			System.out.println(budgetList.length());
 			for(int i=0;i<budgetList.length();++i){
-				JSONObject budgetJSON=(JSONObject)budgetList.get(i);
+				JSONObject budgetJSON=budgetList.getJSONObject(i);
 				Budget budget=new Budget(budgetJSON,period);
 				budget.email=user.email;
 				JSONArray categoryList= getCategoriesListDB(user,budget);
-				for(int j=0;j<categoryList.length();i++){
+				/*for(int j=0;j<categoryList.length();i++){
 					JSONObject categoryJSON=(JSONObject) categoryList.get(i);
 					Category category=new Category(categoryJSON.getString("name"));
 					JSONArray TransList=getTransactionsDB(user,budget,category);
 					categoryJSON.put("transactionList", TransList);
 				}
-				budgetJSON.put("categoryList",categoryList);
+				*/budgetJSON.put("categoryList",categoryList);
 			}
 			JSONObject info = new JSONObject();
 			info.put("budgetLsit", budgetList);
