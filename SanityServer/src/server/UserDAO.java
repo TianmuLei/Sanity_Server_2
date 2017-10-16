@@ -1,13 +1,12 @@
 package server;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Vector;
 
-import org.json.*;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class UserDAO extends DAO{
@@ -16,7 +15,7 @@ public class UserDAO extends DAO{
 		try{		
 			JSONObject message = new JSONObject();
 			message.put("function", "register");	
-			if(checkExisttWithEmail(u.email)){
+			if(checkUserExist(u)){
 				message.put("status", "fail");
 			}
 			else{
@@ -54,33 +53,12 @@ public class UserDAO extends DAO{
 		return null;
 	}
 	
-	public boolean checkExisttWithEmail(String Email) throws SQLException{
-		Connection conn=getDBConnection();
-		PreparedStatement st = conn.prepareStatement("SELECT * FROM SanityDB.User WHERE Email=?");
-		st.setString( 1, Email);
-		try{
-			ResultSet rs = st.executeQuery();
-			
-			System.out.println("check exitst");
-			if(rs.next()){
-				return true;
-			}
-			else{
-				return false;
-			}	
-		}catch(SQLException e){
-			System.out.println(e.getMessage());
-		}finally{
-			if (conn != null) {
-				conn.close();
-			}
-			if (st != null) {
-				st.close();
-			}
-		}				
-		return true;		
+	public boolean checkUserExist(User user) throws SQLException{
+		if(UserFindUserID(user)==-1){
+			return false;
+		}
+		return true;
 	}
-	
 	private boolean verifyPassword(String Email,String ps1,String ps2) throws SQLException{
 		
 		Connection conn=getDBConnection();

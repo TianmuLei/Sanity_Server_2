@@ -22,6 +22,29 @@ public class DAO {
 		}
 		return dbConnection;
 	}
+	
+	protected Integer UserFindUserID(User user) throws SQLException{
+		Integer toReturn=-1;
+		Connection conn=getDBConnection();
+		PreparedStatement st = conn.prepareStatement("SELECT * FROM SanityDB.User WHERE Email=?");
+		st.setString( 1, user.email);
+		try{
+			ResultSet rs = st.executeQuery();
+			if(rs.next()){
+				toReturn=rs.getInt("User_id");
+			}
+		}catch(SQLException e){
+			System.out.println(e.getMessage());
+		}finally{
+			if (conn != null) {
+				conn.close();
+			}
+			if (st != null) {
+				st.close();
+			}
+		}		
+		return toReturn;
+	}
 	protected void BudgetFindUserID(Budget budget) throws SQLException{
 		Connection conn = getDBConnection();
 		PreparedStatement userStatement = conn.prepareStatement("SELECT * FROM SanityDB.User WHERE Email=?");

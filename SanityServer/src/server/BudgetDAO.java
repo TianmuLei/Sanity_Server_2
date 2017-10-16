@@ -13,6 +13,20 @@ public class BudgetDAO extends DAO{
 	public BudgetDAO(){
 		CateDAO = new CategoryDAO();
 	}
+	public JSONObject getBudgetList(User user){
+		JSONObject returnMessage = new JSONObject();
+		Connection conn=getDBConnection();
+		
+		try{
+			returnMessage.put("function", "getBudgetList");
+			
+		}catch(JSONException e){
+			System.out.println("getBudgetList error");
+		}
+		
+		
+		return returnMessage;
+	}
 	public JSONObject editBudget(Budget toEdit, Budget original){
 		try{
 			JSONObject message = new JSONObject();
