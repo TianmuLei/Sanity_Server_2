@@ -112,8 +112,4 @@ public class UserDAO extends DAO{
 			}
 		}		
 	}
-	
-	
-
-	
 }

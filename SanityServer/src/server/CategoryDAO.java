@@ -17,11 +17,9 @@ public class CategoryDAO extends DAO{
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
 			System.out.println("Error in insertCategory");
-		}
-		
+		}		
 	}
 	public JSONArray getCategoriesList(User user, Budget budget){
-		//JSONObject returnMessage = new JSONObject();
 		JSONArray Jarray=new JSONArray();
 		PreparedStatement findAllCategory;
 		try{
@@ -41,28 +39,19 @@ public class CategoryDAO extends DAO{
 				temp.put("categorySpent", rs.getDouble("Category_spent"));
 				Jarray.put(temp);
 			}
-			/*JSONObject information=new JSONObject();
-			information.put("categoryList", Jarray);
-			information.put("budgetName", budget.budgetName);
-			returnMessage.put("function", "returnCategoryList");
-			returnMessage.put("status", "success");
-			returnMessage.put("information", information);	*/	
 			if (findAllCategory != null) {
 				findAllCategory.close();
 			}
-			
+			if(conn!=null){
+				conn.close();
+			}
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
 			System.out.println("Error in getCategory");
 		}catch (JSONException e) {
 			System.out.println(e.getMessage());
 			System.out.println("JSON Error in getCategory");
-		}
-		
-		finally {
-			
-		}
-				
+		}		
 		return Jarray;
 	}
 	
@@ -75,21 +64,13 @@ public class CategoryDAO extends DAO{
 			information.put("budgetName", budget.budgetName);
 			returnMessage.put("function", "returnCategoryList");
 			returnMessage.put("status", "success");
-			returnMessage.put("information", information);
-			
-			
-			
+			returnMessage.put("information", information);		
 		}catch (JSONException e) {
 			System.out.println(e.getMessage());
 			System.out.println("JSON Error in getCategory");
 		}
-		return returnMessage;
-		
+		return returnMessage;	
 	}
-	
-	
-	
-	
 	
 	private void insertCategory(Budget budget) throws SQLException{
 		Connection conn = getDBConnection();
