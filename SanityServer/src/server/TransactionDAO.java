@@ -51,10 +51,10 @@ public class TransactionDAO extends DAO{
 		try{
 			ResultSet rs = findTransaction.executeQuery();
 			if(rs.next()){
-				return false;
+				return true;
 			}
 			else{
-				return true;
+				return false;
 			}
 		}catch(SQLException e){
 			System.out.println("check transaction error ");
