@@ -10,9 +10,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class BudgetDAO extends DAO{
-	CategoryDAO CateDAO;
+	CategoryDAO CateDao;
 	public BudgetDAO(){
-		CateDAO = new CategoryDAO();
+		CateDao = new CategoryDAO();
 	}
 
 	public JSONObject getBudgetList(User user) {
@@ -62,7 +62,7 @@ public class BudgetDAO extends DAO{
 			}
 			else{
 				addBudgetDB(toAdd);
-				CateDAO.addCategory(toAdd);
+				CateDao.addCategory(toAdd);
 				System.out.println("return success");
 				message.put("status", "success");
 			}	

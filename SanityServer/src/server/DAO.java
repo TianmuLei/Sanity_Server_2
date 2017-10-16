@@ -10,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.mysql.jdbc.RowDataCursor;
+
 public class DAO {
 	protected Connection getDBConnection() {
 		Connection dbConnection = null;
@@ -131,6 +133,28 @@ public class DAO {
 			}
 		}
 	}
+	protected void CategoryFindCategoryID(Category cate) throws SQLException{
+		try{
+			Connection conn=getDBConnection();
+			PreparedStatement getCategoryID = conn.prepareStatement("SELECT * FROM SanityDB.Transaction WHERE "
+					+ "User_id=? AND Budget_id=? AND Category_name=?");
+			getCategoryID.setInt(1, cate.userID);
+			getCategoryID.setInt(2, cate.budgetID);
+			getCategoryID.setString(3, cate.categoryName);
+			ResultSet rs = getCategoryID.executeQuery();
+			rs.next();
+			cate.categoryID=rs.getInt("Category_id");
+			if(getCategoryID!=null){
+				getCategoryID.close();
+			}
+			if(conn!=null){
+				conn.close();
+			}
+		}catch(SQLException e){
+			System.out.println("CategoryFindCategory Error");
+		}
+	}
+	
 	protected void TransactionFindCategoryID(Transaction tran) throws SQLException{
 		Connection conn = getDBConnection();
 		PreparedStatement findCategoryID = conn.prepareStatement("SELECT * FROM SanityDB.Category"

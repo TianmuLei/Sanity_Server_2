@@ -5,6 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.management.relation.RoleUnresolved;
+import javax.naming.spi.DirStateFactory.Result;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,6 +36,43 @@ public class TransactionDAO extends DAO{
 			e.printStackTrace();
 		}	
 		return null;
+	}
+	
+	public JSONObject getTransactions(User user, Budget budget, Category category){
+		JSONObject returnMessage = new JSONObject();
+		try{
+			category.userID =UserFindUserID(user);
+			BudgetFindBudgetID(budget);
+			category.budgetID=budget.budgetId;
+			CategoryFindCategoryID(category);
+			Connection conn= getDBConnection();
+			PreparedStatement getTransactions = conn.prepareStatement("SELECT * FROM SanityDB.Transaction "
+					+ "WHERE User_id=? AND Budget_id=? AND Category_id=?");
+			getTransactions.setInt(1, category.userID);
+			getTransactions.setInt(2, category.budgetID);
+			getTransactions.setInt(3, category.categoryID);
+			ResultSet rs=getTransactions.executeQuery();
+			JSONObject generalInfo = new JSONObject();
+			JSONArray Jarray= new JSONArray();
+			generalInfo.put("budget", budget.budgetName);
+			generalInfo.put("category", category.categoryName);
+			while(rs.next()){
+				JSONObject temp = new JSONObject();
+				temp.put("description", rs.getString("Transaction_description"));
+				temp.put("amount", rs.getDouble("Transaction_amount"));
+				temp.put("date", rs.getDate("Transaction_date").toString());
+				Jarray.put(temp);
+			}
+			generalInfo.put("transctionList", Jarray);
+			returnMessage.put("function", "returnTransactionsList");
+			returnMessage.put("Information", generalInfo);
+			
+		}catch (SQLException e) {
+			System.out.println("getTrasactions error");
+		}catch(JSONException e){
+			System.out.println("getTransactions error");
+		}
+		return returnMessage;
 	}
 	
 	private Boolean checkTransactionExist(Transaction toAdd) throws SQLException{
