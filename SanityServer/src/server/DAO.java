@@ -198,8 +198,10 @@ public class DAO {
 				Jarray.put(temp);
 			}
 		}catch(JSONException e){
+			System.out.println(e.getMessage());
 			System.out.println("getBudgetListDB error");
 		}catch(SQLException e){
+			System.out.println(e.getMessage());
 			System.out.println("getBudgetListDB error");
 		}
 		return Jarray;
@@ -274,6 +276,7 @@ public class DAO {
 			System.out.println(e.getMessage());
 			System.out.println("getTrasactions error");
 		}catch(JSONException e){
+			System.out.println(e.getMessage());
 			System.out.println("getTransactions error");
 		}
 		return transList;
