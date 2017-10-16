@@ -24,13 +24,13 @@ public class BudgetDAO extends DAO{
 				Budget budget=new Budget(budgetJSON,period);
 				budget.email=user.email;
 				JSONArray categoryList= getCategoriesListDB(user,budget);
-				/*for(int j=0;j<categoryList.length();i++){
-					JSONObject categoryJSON=(JSONObject) categoryList.get(i);
+				for(int j=0;j<categoryList.length();j++){
+					JSONObject categoryJSON=(JSONObject) categoryList.get(j);
 					Category category=new Category(categoryJSON.getString("name"));
 					JSONArray TransList=getTransactionsDB(user,budget,category);
 					categoryJSON.put("transactionList", TransList);
 				}
-				*/budgetJSON.put("categoryList",categoryList);
+				budgetJSON.put("categoryList",categoryList);
 			}
 			JSONObject info = new JSONObject();
 			info.put("budgetLsit", budgetList);
