@@ -39,6 +39,7 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.jdbc.object.UpdatableSqlQuery;
 
 
 public class Server extends WebSocketServer {
@@ -119,6 +120,11 @@ public class Server extends WebSocketServer {
 			else if(message1.equals("deleteTransaction")){
 				Transaction transaction = new Transaction(JSONMessage.getJSONObject("information"));
 				JSONObject returnMessage = transactionDao.deleteTransaction(transaction);
+				sendMessagetoClient(conn, returnMessage);
+			}
+			else if(message1.equals("requestEverything")){
+				User user= new User(JSONMessage.getJSONObject("information").getString("email"));
+				JSONObject returnMessage=budgetDao.getEverything(user, 0);
 				sendMessagetoClient(conn, returnMessage);
 			}
 		}catch(JSONException e){

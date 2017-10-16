@@ -10,8 +10,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.mysql.jdbc.RowDataCursor;
-
 public class DAO {
 	protected Connection getDBConnection() {
 		Connection dbConnection = null;
@@ -204,5 +202,79 @@ public class DAO {
 			System.out.println("getBudgetListDB error");
 		}
 		return Jarray;
+	}
+	
+	protected JSONArray getCategoriesListDB(User user, Budget budget){
+		JSONArray Jarray=new JSONArray();
+		PreparedStatement findAllCategory;
+		try{
+			Integer user_id=UserFindUserID(user);
+			budget.userId=user_id;
+			BudgetFindBudgetID(budget);
+			Integer budgetID=budget.budgetId;
+			Connection conn=getDBConnection();
+			findAllCategory= conn.prepareStatement("SELECT * FROM SanityDB.Category WHERE User_id=? AND Budget_id=?");
+			findAllCategory.setInt(1, user_id);
+			findAllCategory.setInt(2, budgetID);
+			ResultSet rs =findAllCategory.executeQuery();
+			while(rs.next()){
+				JSONObject temp = new JSONObject();
+				temp.put("name", rs.getString("Category_name"));
+				temp.put("limit", rs.getDouble("Category_total"));
+				temp.put("categorySpent", rs.getDouble("Category_spent"));
+				temp.put("budgetName", budget.budgetName);
+				temp.put("requestPeriod", budget.requestPeriod);
+				Jarray.put(temp);
+			}
+			if (findAllCategory != null) {
+				findAllCategory.close();
+			}
+			if(conn!=null){
+				conn.close();
+			}
+		}catch(SQLException e){
+			System.out.println(e.getMessage());
+			System.out.println("Error in getCategory");
+		}catch (JSONException e) {
+			System.out.println(e.getMessage());
+			System.out.println("JSON Error in getCategory");
+		}		
+		return Jarray;
+	}
+	
+	public JSONArray getTransactionsDB(User user, Budget budget, Category category){
+		JSONArray transList= new JSONArray();
+		try{
+			category.userID =UserFindUserID(user);
+			budget.userId=category.userID;
+			BudgetFindBudgetID(budget);
+			category.budgetID=budget.budgetId;
+			CategoryFindCategoryID(category);
+			Connection conn= getDBConnection();
+			PreparedStatement getTransactions = conn.prepareStatement("SELECT * FROM SanityDB.Transaction "
+					+ "WHERE User_id=? AND Budget_id=? AND Category_id=?");
+			getTransactions.setInt(1, category.userID);
+			getTransactions.setInt(2, category.budgetID);
+			getTransactions.setInt(3, category.categoryID);
+			ResultSet rs=getTransactions.executeQuery();
+			//JSONObject generalInfo = new JSONObject();
+			
+			
+			while(rs.next()){
+				JSONObject temp = new JSONObject();
+				temp.put("description", rs.getString("Transaction_description"));
+				temp.put("amount", rs.getDouble("Transaction_amount"));
+				temp.put("date", rs.getDate("Transaction_date").toString());
+				temp.put("budgetName", budget.budgetName);
+				temp.put("categoryName", category.categoryName);
+				transList.put(temp);
+			}
+		}catch (SQLException e) {
+			System.out.println(e.getMessage());
+			System.out.println("getTrasactions error");
+		}catch(JSONException e){
+			System.out.println("getTransactions error");
+		}
+		return transList;
 	}
 }

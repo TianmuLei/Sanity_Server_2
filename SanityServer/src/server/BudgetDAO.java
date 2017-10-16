@@ -14,6 +14,36 @@ public class BudgetDAO extends DAO{
 	public BudgetDAO(){
 		CateDao = new CategoryDAO();
 	}
+	public JSONObject getEverything(User user,Integer period){
+		JSONObject returnMessage = new JSONObject();
+		try{
+			JSONArray budgetList=getBudgetListDB(user);
+			for(int i=0;i<budgetList.length();++i){
+				JSONObject budgetJSON=(JSONObject)budgetList.get(i);
+				Budget budget=new Budget(budgetJSON,period);
+				budget.email=user.email;
+				JSONArray categoryList= getCategoriesListDB(user,budget);
+				for(int j=0;j<categoryList.length();i++){
+					JSONObject categoryJSON=(JSONObject) categoryList.get(i);
+					Category category=new Category(categoryJSON.getString("name"));
+					JSONArray TransList=getTransactionsDB(user,budget,category);
+					categoryJSON.put("transactionList", TransList);
+				}
+				budgetJSON.put("categoryList",categoryList);
+			}
+			JSONObject info = new JSONObject();
+			info.put("budgetLsit", budgetList);
+			returnMessage.put("function", "returnEverything");
+			returnMessage.put("information", info);
+		}catch(SQLException e){
+			System.out.println(e.getMessage());
+			System.out.println("get Everything error");
+		}catch (JSONException e) {
+			System.out.println(e.getMessage());
+			System.out.println("get Everything JSON error");
+		}
+		return returnMessage;
+	}
 
 	public JSONObject getBudgetList(User user) {
 		JSONObject returnMessage = new JSONObject();

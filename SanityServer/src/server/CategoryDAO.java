@@ -19,46 +19,12 @@ public class CategoryDAO extends DAO{
 			System.out.println("Error in insertCategory");
 		}		
 	}
-	public JSONArray getCategoriesList(User user, Budget budget){
-		JSONArray Jarray=new JSONArray();
-		PreparedStatement findAllCategory;
-		try{
-			Integer user_id=UserFindUserID(user);
-			budget.userId=user_id;
-			BudgetFindBudgetID(budget);
-			Integer budgetID=budget.budgetId;
-			Connection conn=getDBConnection();
-			findAllCategory= conn.prepareStatement("SELECT * FROM SanityDB.Category WHERE User_id=? AND Budget_id=?");
-			findAllCategory.setInt(1, user_id);
-			findAllCategory.setInt(2, budgetID);
-			ResultSet rs =findAllCategory.executeQuery();
-			while(rs.next()){
-				JSONObject temp = new JSONObject();
-				temp.put("name", rs.getString("Category_name"));
-				temp.put("limit", rs.getDouble("Category_total"));
-				temp.put("categorySpent", rs.getDouble("Category_spent"));
-				Jarray.put(temp);
-			}
-			if (findAllCategory != null) {
-				findAllCategory.close();
-			}
-			if(conn!=null){
-				conn.close();
-			}
-		}catch(SQLException e){
-			System.out.println(e.getMessage());
-			System.out.println("Error in getCategory");
-		}catch (JSONException e) {
-			System.out.println(e.getMessage());
-			System.out.println("JSON Error in getCategory");
-		}		
-		return Jarray;
-	}
+
 	
 	public JSONObject getCategories(User user, Budget budget){
 		JSONObject returnMessage = new JSONObject();
 		try{
-			JSONArray array=getCategoriesList(user, budget);	
+			JSONArray array=getCategoriesListDB(user, budget);	
 			JSONObject information=new JSONObject();
 			information.put("categoryList", array);
 			information.put("budgetName", budget.budgetName);

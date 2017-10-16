@@ -15,6 +15,7 @@ public class Budget {
 	Integer budgetId=-1;
 	Integer frequency=-1;
 	Integer threshold = -1;
+	Integer requestPeriod=-1;
 	public Budget(JSONObject JSONMessage){
 		try{
 			categories = new ArrayList<Category>();
@@ -34,6 +35,26 @@ public class Budget {
 			System.out.println("contructing budget Error");
 		}
 	}
+	public Budget(JSONObject JSONMessage,Integer requestPeriod){
+		try{
+			//categories = new ArrayList<Category>();
+			//email=JSONMessage.getString("email");
+			budgetName=JSONMessage.getString("name");
+			date=JSONMessage.getString("date");
+			period=JSONMessage.getInt("period");
+			budgetTotal= JSONMessage.getDouble("budgetTotal");
+			frequency = JSONMessage.getInt("frequency");
+			threshold = JSONMessage.getInt("threshold");
+			this.requestPeriod=requestPeriod;
+		
+			
+		}catch(JSONException e){
+			System.out.println(e.getMessage());
+			System.out.println("contructing budget Error");
+		}
+	}
+	
+	
 	
 	public Budget(String name) {
 		budgetName=name;
