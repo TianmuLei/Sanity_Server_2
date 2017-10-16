@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,8 +99,15 @@ public class Server extends WebSocketServer {
 				JSONObject returnMessage = transactionDao.createTransaction(toAdd);
 				sendMessagetoClient(conn, returnMessage);
 			}
+			else if(message1.equals("requestBudgetList")){
+				User user = new User(JSONMessage.getJSONObject("information").getString("email"));
+				JSONObject returnMessage = budgetDao.getBudgetList(user);
+				sendMessagetoClient(conn, returnMessage);
+			}
 		}catch(JSONException e){
 			System.out.println(e.getMessage());
+		}catch(SQLException e){
+			System.out.println("requestBudgetList Error OR...");
 		}
 	}
 

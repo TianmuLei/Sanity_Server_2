@@ -26,4 +26,10 @@ public class User {
 			System.out.println(e.getMessage());
 		}	
 	}
+	public User(String email){
+		this.username="";
+		this.email=email;
+		this.password1="";
+		this.password2="";
+	}
 }

@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,17 +15,38 @@ public class BudgetDAO extends DAO{
 	public BudgetDAO(){
 		CateDAO = new CategoryDAO();
 	}
-	public JSONObject getBudgetList(User user){
+	public JSONObject getBudgetList(User user) throws SQLException{
+		JSONObject information = new JSONObject();
 		JSONObject returnMessage = new JSONObject();
 		Connection conn=getDBConnection();
-		
+		PreparedStatement findAllBudget= conn.prepareStatement("SELECT * FROM SanityDB.Budget WHERE User_id=?");
+		Integer userID=-1;
+		JSONArray Jarray= new JSONArray();
 		try{
-			returnMessage.put("function", "getBudgetList");
+			userID=UserFindUserID(user);
+			findAllBudget.setInt(1, userID);
+			ResultSet rs =findAllBudget.executeQuery();
+			while(rs.next()){
+				JSONObject temp = new JSONObject();
+				temp.put("name", rs.getString("Budget_name"));
+				temp.put("date", rs.getDate("Start_date").toString());
+				temp.put("budgetTotal", rs.getDouble("Budget_total"));
+				temp.put("budgetSpent", rs.getDouble("Budget_spent"));
+				temp.put("threshold",rs.getInt("Threshold"));
+				temp.put("frequency", rs.getInt("Frequency"));
+				Jarray.put(temp);
+			}
+			
+			information.put("budgetList", Jarray);
+			returnMessage.put("function", "returnBudgetList");
+			returnMessage.put("status", "success");
+			returnMessage.put("information", information);
 			
 		}catch(JSONException e){
 			System.out.println("getBudgetList error");
+		}catch(SQLException e){
+			System.out.println("getBudgetList error");
 		}
-		
 		
 		return returnMessage;
 	}
