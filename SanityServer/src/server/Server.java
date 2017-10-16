@@ -41,9 +41,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-/**
- * A simple WebSocketServer implementation. Keeps track of a "chatroom".
- */
 public class Server extends WebSocketServer {
 	private UserDAO userDao;
 	private BudgetDAO budgetDao;

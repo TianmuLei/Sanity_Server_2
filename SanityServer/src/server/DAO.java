@@ -107,7 +107,7 @@ public class DAO {
 	protected void TransactionFindCategoryID(Transaction tran) throws SQLException{
 		Connection conn = getDBConnection();
 		PreparedStatement findCategoryID = conn.prepareStatement("SELECT * FROM SanityDB.Category"
-				+ "WHERE Budget_id=? AND User_id=? AND Category_name=?");
+				+ " WHERE Budget_id=? AND User_id=? AND Category_name=?");
 		findCategoryID.setInt(1, tran.budgetID);
 		findCategoryID.setInt(2, tran.userID);
 		findCategoryID.setString(3, tran.category);

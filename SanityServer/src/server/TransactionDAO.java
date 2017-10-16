@@ -39,7 +39,7 @@ public class TransactionDAO extends DAO{
 		TransactionFindUserID(toAdd);
 		TransactionFindBudgetID(toAdd);
 		TransactionFindCategoryID(toAdd);
-		PreparedStatement findTransaction = conn.prepareStatement("SELECT * FROM SanityDB.Transaction WHERE"
+		PreparedStatement findTransaction = conn.prepareStatement("SELECT * FROM SanityDB.Transaction WHERE "
 				+ "Transaction_description=? AND User_id=? AND Transaction_amount=? AND Transaction_date=?"
 				+ "AND Budget_id=? AND Category_id=?");
 		findTransaction.setString(1, toAdd.description);
@@ -81,7 +81,7 @@ public class TransactionDAO extends DAO{
 		try{
 			insert.executeUpdate();
 		}catch(SQLException e){
-			System.out.println("check transaction error ");
+			System.out.println("insert transaction error ");
 		}finally{
 			if(insert!=null){
 				insert.close();
@@ -96,7 +96,7 @@ public class TransactionDAO extends DAO{
 		Double budgetspent=0.0;
 		Double categoryspent=0.0;
 		PreparedStatement getbudget = conn.prepareStatement("SELECT * FROM SanityDB.Budget WHERE Budget_id=?");
-		PreparedStatement getcategory = conn.prepareStatement("SELECT* FROM SanityDB.Category WHERE Category_id=?");
+		PreparedStatement getcategory = conn.prepareStatement("SELECT * FROM SanityDB.Category WHERE Category_id=?");
 		getbudget.setInt(1, toAdd.budgetID);
 		getcategory.setInt(1, toAdd.categoryID);
 		try{
