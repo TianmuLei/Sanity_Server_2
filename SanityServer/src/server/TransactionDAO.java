@@ -66,7 +66,6 @@ public class TransactionDAO extends DAO{
 			generalInfo.put("transctionList", Jarray);
 			returnMessage.put("function", "returnTransactionsList");
 			returnMessage.put("Information", generalInfo);
-			
 		}catch (SQLException e) {
 			System.out.println("getTrasactions error");
 		}catch(JSONException e){
