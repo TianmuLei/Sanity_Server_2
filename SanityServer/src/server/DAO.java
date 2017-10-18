@@ -255,10 +255,21 @@ public class DAO {
 			CategoryFindCategoryID(category);
 			Connection conn= getDBConnection();
 			PreparedStatement getTransactions = conn.prepareStatement("SELECT * FROM SanityDB.Transaction "
-					+ "WHERE User_id=? AND Budget_id=? AND Category_id=?");
+					+ "WHERE User_id=? AND Budget_id=? AND Category_id=? AND Transaction_date between ? and ?");
+			
+			String startDate=DateCal.calculateCurrentStart(budget.date, budget.period, budget.requestPeriod);
+			String endDate;
+			if(budget.requestPeriod==0){
+				endDate=DateCal.today();
+			}
+			else{
+				endDate=DateCal.getEndDate(startDate, budget.period);
+			}
 			getTransactions.setInt(1, category.userID);
 			getTransactions.setInt(2, category.budgetID);
 			getTransactions.setInt(3, category.categoryID);
+			getTransactions.setDate(4,java.sql.Date.valueOf(startDate));
+			getTransactions.setDate(5,java.sql.Date.valueOf(endDate));
 			ResultSet rs=getTransactions.executeQuery();
 			//JSONObject generalInfo = new JSONObject();
 			

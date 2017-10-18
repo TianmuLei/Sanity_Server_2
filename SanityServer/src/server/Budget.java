@@ -16,6 +16,8 @@ public class Budget {
 	Integer frequency=-1;
 	Integer threshold = -1;
 	Integer requestPeriod=-1;
+	String realStartDate;
+	String realEndDate;
 	public Budget(JSONObject JSONMessage){
 		try{
 			categories = new ArrayList<Category>();

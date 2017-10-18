@@ -27,7 +27,7 @@ public class BudgetDAO extends DAO{
 				for(int j=0;j<categoryList.length();j++){
 					JSONObject categoryJSON=(JSONObject) categoryList.get(j);
 					Category category=new Category(categoryJSON.getString("name"));
-					JSONArray TransList=getTransactionsDB(user,budget,category);
+					JSONArray TransList=getTransactionsDB(user,budget,category); 
 					categoryJSON.put("transactionList", TransList);
 				}
 				budgetJSON.put("categoryList",categoryList);

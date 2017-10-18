@@ -32,6 +32,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sound.midi.MidiDevice.Info;
+
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
@@ -87,16 +89,33 @@ public class Server extends WebSocketServer {
 			else if(message1.equals("login")){	
 				User user = new User(JSONMessage.getJSONObject("information"));
 				JSONObject returnMessage=userDao.Login(user);
+				if(returnMessage.getString("status").equals("success")){
+					JSONObject info=budgetDao.getEverything(user, 0);
+					returnMessage.put("information", info.getJSONObject("information"));
+				}
+				
+				
 				sendMessagetoClient(conn,returnMessage);
 			}
 			else if(message1.equals("createBudget")){
 				Budget toAdd = new Budget(JSONMessage.getJSONObject("information"));
 				JSONObject returnMessage= budgetDao.createBudget(toAdd);
+				User user = new User(JSONMessage.getJSONObject("information"));
+				if(returnMessage.getString("status").equals("success")){
+					JSONObject info=budgetDao.getEverything(user, 0);
+					returnMessage.put("information", info.getJSONObject("information").get("email"));
+				}
+				
 				sendMessagetoClient(conn,returnMessage);
 			}
 			else if (message1.equals("addTransaction")){
 				Transaction toAdd = new Transaction(JSONMessage.getJSONObject("information"));
 				JSONObject returnMessage = transactionDao.createTransaction(toAdd);
+				User user = new User(JSONMessage.getJSONObject("information").getString("email"));
+				if(returnMessage.getString("status").equals("success")){
+					JSONObject info=budgetDao.getEverything(user, 0);
+					returnMessage.put("information", info.getJSONObject("information"));
+				}
 				sendMessagetoClient(conn, returnMessage);
 			}
 			else if(message1.equals("requestBudgetList")){

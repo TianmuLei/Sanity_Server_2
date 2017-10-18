@@ -44,7 +44,7 @@ public class DateCal {
 		
 		if(startday.compareTo(today)<=0){
 			
-			System.out.println("here");
+			//System.out.println("here");
 			
 			while(startday.compareTo(today)<=0){
 				startday.add(Calendar.DAY_OF_MONTH, period);	
@@ -72,6 +72,27 @@ public class DateCal {
 		
 	}
 	
+	public static String today() {
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar today = Calendar.getInstance();
+		
+		
+		return sdf.format(today.getTime());
+	}
+	public static String getEndDate(String startSate,Integer period){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar startday = Calendar.getInstance();
+		try {
+			startday.setTime(sdf.parse(startSate));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		startday.add(Calendar.DAY_OF_MONTH, period);
+		return sdf.format(startday.getTime());
+		
+	}
 	
 
 }
