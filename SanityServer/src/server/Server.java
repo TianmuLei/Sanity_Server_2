@@ -97,6 +97,17 @@ public class Server extends WebSocketServer {
 				
 				sendMessagetoClient(conn,returnMessage);
 			}
+			else if(message1.equals("changeUsername")){	
+				User user = new User(JSONMessage.getJSONObject("information"));
+				JSONObject returnMessage=userDao.changeUsername(user);
+				sendMessagetoClient(conn,returnMessage);
+			}
+			else if(message1.equals("changePassword")){	
+				User user1 = new User(JSONMessage.getJSONObject("information1"));
+				User user2 = new User(JSONMessage.getJSONObject("information2"));
+				JSONObject returnMessage=userDao.changePassword(user1, user2);
+				sendMessagetoClient(conn,returnMessage);
+			}
 			else if(message1.equals("createBudget")){
 				Budget toAdd = new Budget(JSONMessage.getJSONObject("information"));
 				JSONObject returnMessage= budgetDao.createBudget(toAdd);
