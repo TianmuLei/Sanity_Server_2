@@ -135,32 +135,36 @@ public class UserDAO extends DAO{
 			}
 		}		
 	}
+	
 	public JSONObject changeUsername(User user) throws SQLException{
 		System.out.println("change Username");
 		Connection conn=getDBConnection();
 		JSONObject message = new JSONObject();
-				message.put("function", "changeUsername")
+				try {
+					message.put("function", "changeUsername");
+				} catch (JSONException e1) {
+					e1.printStackTrace();
+				}
 		try{
-			 if(verifyPassword(user.email, user.password1, user.password2)){
-			 	PrepareStatement upUser = conn.prepareStatement("UPDATE  SanityDB.User SET Username
-			 		= ? WHERE Email = ?");
-				st.setString( 1, user.username);
-				st.setString( 2, user.email);
-				st.execute();
+			 //if(verifyPassword(user.email, user.password1, user.password2)){
+			 	PreparedStatement upUser = conn.prepareStatement("UPDATE  SanityDB.User SET Username= ? WHERE Email = ?");
+				upUser.setString( 1, user.username);
+				upUser.setString( 2, user.email);
+				upUser.execute();
 				message.put("status", "success");
-			 }	
-			 else{
-			 	message.put("status", "fail");
-			 }	
+			// }	
+			// else{
+			 //	message.put("status", "fail");
+			 //}	
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}finally{
 			if (conn != null) {
 				conn.close();
 			}
-			if (st != null) {
-				st.close();
-			}
+			
 		}
 		return message;		
 	}
@@ -168,15 +172,19 @@ public class UserDAO extends DAO{
 		System.out.println("change password");
 		Connection conn=getDBConnection();
 		JSONObject message = new JSONObject();
-				message.put("function", "changeUsername")
+				try {
+					message.put("function", "changePassword");
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 		try{
 			 if(verifyPassword(user1.email, user1.password1, user1.password2)){
-			 	PrepareStatement upUser = conn.prepareStatement("UPDATE  SanityDB.User SET password1
-			 		= ? and password2 = ? WHERE Email = ?");
-				st.setString( 1, user2.password1);
-				st.setString( 2, user2.password2);
-				st.setString( 3, user2.email);
-				st.execute();
+			 	PreparedStatement upUser = conn.prepareStatement("UPDATE  SanityDB.User SET Password1= ? and Password2 = ? WHERE Email = ?");
+				upUser.setString( 1, user2.password1);
+				upUser.setString( 2, user2.password2);
+				upUser.setString( 3, user2.email);
+				upUser.execute();
 				message.put("status", "success");
 			 }	
 			 else{
@@ -184,14 +192,16 @@ public class UserDAO extends DAO{
 			 }	
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}finally{
 			if (conn != null) {
 				conn.close();
 			}
-			if (st != null) {
-				st.close();
-			}
+			
 		}
 		return message;		
 	}
 }
+	

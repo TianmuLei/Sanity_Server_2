@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,24 +98,13 @@ public class Server extends WebSocketServer {
 				
 				sendMessagetoClient(conn,returnMessage);
 			}
-			else if(message1.equals("changeUsername")){	
-				User user = new User(JSONMessage.getJSONObject("information"));
-				JSONObject returnMessage=userDao.changeUsername(user);
-				sendMessagetoClient(conn,returnMessage);
-			}
-			else if(message1.equals("changePassword")){	
-				User user1 = new User(JSONMessage.getJSONObject("information1"));
-				User user2 = new User(JSONMessage.getJSONObject("information2"));
-				JSONObject returnMessage=userDao.changePassword(user1, user2);
-				sendMessagetoClient(conn,returnMessage);
-			}
 			else if(message1.equals("createBudget")){
 				Budget toAdd = new Budget(JSONMessage.getJSONObject("information"));
 				JSONObject returnMessage= budgetDao.createBudget(toAdd);
-				User user = new User(JSONMessage.getJSONObject("information"));
+				User user = new User(JSONMessage.getJSONObject("information").getString("email"));
 				if(returnMessage.getString("status").equals("success")){
 					JSONObject info=budgetDao.getEverything(user, 0);
-					returnMessage.put("information", info.getJSONObject("information").get("email"));
+					returnMessage.put("information", info.getJSONObject("information"));
 				}
 				
 				sendMessagetoClient(conn,returnMessage);
@@ -157,8 +147,24 @@ public class Server extends WebSocketServer {
 				JSONObject returnMessage=budgetDao.getEverything(user, 0);
 				sendMessagetoClient(conn, returnMessage);
 			}
+			else if(message1.equals("changeUsername")){	
+				User user = new User(JSONMessage.getJSONObject("information"));
+				JSONObject returnMessage=userDao.changeUsername(user);
+				sendMessagetoClient(conn,returnMessage);
+			}
+			else if(message1.equals("changePassword")){	
+				User user1 = new User(JSONMessage.getJSONObject("information1"));
+				User user2 = new User(JSONMessage.getJSONObject("information2"));
+				JSONObject returnMessage=userDao.changePassword(user1, user2);
+				sendMessagetoClient(conn,returnMessage);
+			}
 		}catch(JSONException e){
+			
 			System.out.println(e.getMessage());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
