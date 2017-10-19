@@ -158,6 +158,38 @@ public class Server extends WebSocketServer {
 				JSONObject returnMessage=userDao.changePassword(user1, user2);
 				sendMessagetoClient(conn,returnMessage);
 			}
+			else if(message1.equals("requestHistory")){	
+				User user= new User(JSONMessage.getJSONObject("information").getString("email"));
+				JSONObject returnMessage1=budgetDao.getEverything(user, 1);
+				JSONObject returnMessage2=budgetDao.getEverything(user, 2);
+				JSONObject returnMessage3=budgetDao.getEverything(user, 3);
+				JSONObject returnMessage4=budgetDao.getEverything(user, 4);
+				JSONObject returnMessage5=budgetDao.getEverything(user, 5);
+				JSONObject returnMessage6=budgetDao.getEverything(user, 6);
+				JSONObject messagenew= new JSONObject();
+				messagenew.put("function", "requestHistory");
+				messagenew.put("status", "success");
+				messagenew.put("information1", returnMessage1.getJSONObject("information"));
+				messagenew.put("information2", returnMessage2.getJSONObject("information"));
+				messagenew.put("information3", returnMessage3.getJSONObject("information"));
+				messagenew.put("information4", returnMessage4.getJSONObject("information"));
+				messagenew.put("information5", returnMessage5.getJSONObject("information"));
+				messagenew.put("information6", returnMessage6.getJSONObject("information"));
+				
+				sendMessagetoClient(conn,messagenew);
+				
+			}
+			else if(message1.equals("editBudget")){
+				Budget toAdd = new Budget(JSONMessage.getJSONObject("information"));
+				Budget old=new Budget(JSONMessage.getJSONObject("information").getString("oldName"));
+				JSONObject returnMessage=budgetDao.editBudget(toAdd, old);
+				User user = new User(JSONMessage.getJSONObject("information").getString("email"));
+				if(returnMessage.getString("status").equals("success")){
+					JSONObject info=budgetDao.getEverything(user, 0);
+					returnMessage.put("information", info.getJSONObject("information"));
+				}
+				sendMessagetoClient(conn, returnMessage);	
+			}
 		}catch(JSONException e){
 			
 			System.out.println(e.getMessage());

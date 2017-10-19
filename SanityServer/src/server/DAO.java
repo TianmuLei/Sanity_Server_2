@@ -189,12 +189,23 @@ public class DAO {
 			while(rs.next()){
 				JSONObject temp = new JSONObject();
 				temp.put("name", rs.getString("Budget_name"));
-				temp.put("date", rs.getDate("Start_date").toString());
+				String start=rs.getDate("Start_date").toString();
+				temp.put("date", start);
 				temp.put("budgetTotal", rs.getDouble("Budget_total"));
 				temp.put("budgetSpent",0);
 				temp.put("threshold",rs.getInt("Threshold"));
 				temp.put("frequency", rs.getInt("Frequency"));
-				temp.put("period", rs.getInt("Budget_period"));
+				Integer period=rs.getInt("Budget_period");
+				temp.put("period",period );
+				
+				String startDate=DateCal.calculateCurrentStart(start,period, 0);
+				String endDate;
+				endDate=DateCal.getEndDate(startDate, period);
+				long remain=DateCal.getRemian(endDate);
+				temp.put("remain", remain);
+				
+				
+				
 				Jarray.put(temp);
 			}
 		}catch(JSONException e){

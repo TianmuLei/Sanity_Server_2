@@ -94,5 +94,39 @@ public class DateCal {
 		
 	}
 	
+	public static long getRemian(String endDate){
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar endday = Calendar.getInstance();
+		try {
+			endday.setTime(sdf.parse(endDate));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Calendar today = Calendar.getInstance();
+		
+		Date startDate = today.getTime();
+		Date endDate1 = endday.getTime();
+		
+		long startTime = startDate.getTime();
+		long endTime = endDate1.getTime();
+		long diffTime = endTime - startTime;
+		long diffDays = diffTime / (1000 * 60 * 60 * 24);
+		return diffDays;
+		
+		
+		
+		
+	}
+	
+	
+	/*public static void main( String[] args ){
+		String start="2017-11-1";
+		long result=DateCal.getRemian(start);
+		System.out.println(result);
+	}*/
+	
 
 }

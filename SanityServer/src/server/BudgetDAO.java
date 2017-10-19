@@ -191,21 +191,21 @@ public class BudgetDAO extends DAO{
 		try{
 			Connection conn=getDBConnection();
 			// find the original budget and then update;
-			BudgetFindUserID(original);
+			BudgetFindUserID(toEdit);
 			BudgetFindBudgetID(original);
 			toEdit.budgetId=original.budgetId;
-			toEdit.userId=original.userId;
+		//	toEdit.userId=toEdit.userId;
 			PreparedStatement updateStatement = conn.prepareStatement("UPDATE SanityDB.Budget SET Budget_name=?"
-					+ ",Budget_period=?,Start_date=?,Budget_total=?,"
+					+ ",Budget_period=?,"
 					+ "Frequency=?,Threshold=? WHERE Budget_id=? AND User_id=?");
 			updateStatement.setString(1, toEdit.budgetName);
 			updateStatement.setInt(2, toEdit.period);
-			updateStatement.setDate(3, java.sql.Date.valueOf(toEdit.date));
-			updateStatement.setDouble(4, toEdit.budgetTotal);
-			updateStatement.setInt(5, toEdit.frequency);
-			updateStatement.setInt(6, toEdit.threshold);
-			updateStatement.setInt(7, toEdit.budgetId);
-			updateStatement.setInt(8, toEdit.userId);
+			//updateStatement.setDate(3, java.sql.Date.valueOf(toEdit.date));
+			//updateStatement.setDouble(4, toEdit.budgetTotal);
+			updateStatement.setInt(3, toEdit.frequency);
+			updateStatement.setInt(4, toEdit.threshold);
+			updateStatement.setInt(5, toEdit.budgetId);
+			updateStatement.setInt(6, toEdit.userId);
 			updateStatement.executeUpdate();
 			return true;
 		}catch(SQLException e){
