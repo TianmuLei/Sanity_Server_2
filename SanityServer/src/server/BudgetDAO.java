@@ -51,9 +51,6 @@ public class BudgetDAO extends DAO{
 				budgetJSON.put("budgetSpent", tranSpent);
 				
 			}
-			
-			
-			
 			JSONObject info = new JSONObject();
 			info.put("budgetLsit", budgetList);
 			returnMessage.put("function", "returnEverything");
@@ -87,8 +84,9 @@ public class BudgetDAO extends DAO{
 	
 	
 	public JSONObject editBudget(Budget toEdit, Budget original){
+		JSONObject message = new JSONObject();
 		try{
-			JSONObject message = new JSONObject();
+			
 			message.put("function", "editBudget");
 			if(checkBudgetExist(toEdit)){
 				message.put("status", "fail");
@@ -100,11 +98,12 @@ public class BudgetDAO extends DAO{
 			}
 		}catch (JSONException e) {
 			System.out.println(e.getMessage());
-			e.printStackTrace();
+			System.out.println("edit budget error with JSON");
 		}catch(SQLException e){
-			e.printStackTrace();
+			System.out.println(e.getMessage());
+			System.out.println("edit budget with SQL");
 		}
-		return null;
+		return message;
 	}
 	public JSONObject createBudget(Budget toAdd){	
 		try{

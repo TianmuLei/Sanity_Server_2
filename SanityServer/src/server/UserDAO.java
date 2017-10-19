@@ -41,8 +41,8 @@ public class UserDAO extends DAO{
 				message.put("status", "success");
 				String username = getUsername(u.email);
 				message.put("username", username);
-				JSONArray budgetList= getBudgetListDB(u);
-				message.put("budgetList", budgetList);
+				//JSONArray budgetList= getBudgetListDB(u);
+				//message.put("budgetList", budgetList);
 			}
 			else{
 				System.out.println("return false");

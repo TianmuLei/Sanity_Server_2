@@ -175,15 +175,16 @@ public class Server extends WebSocketServer {
 				messagenew.put("information4", returnMessage4.getJSONObject("information"));
 				messagenew.put("information5", returnMessage5.getJSONObject("information"));
 				messagenew.put("information6", returnMessage6.getJSONObject("information"));
-				
 				sendMessagetoClient(conn,messagenew);
-				
 			}
 			else if(message1.equals("editBudget")){
 				Budget toAdd = new Budget(JSONMessage.getJSONObject("information"));
 				Budget old=new Budget(JSONMessage.getJSONObject("information").getString("oldName"));
 				JSONObject returnMessage=budgetDao.editBudget(toAdd, old);
 				User user = new User(JSONMessage.getJSONObject("information").getString("email"));
+				if(returnMessage==null){
+					System.out.println("null return message");
+				}
 				if(returnMessage.getString("status").equals("success")){
 					JSONObject info=budgetDao.getEverything(user, 0);
 					returnMessage.put("information", info.getJSONObject("information"));

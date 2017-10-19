@@ -314,12 +314,18 @@ public class DAO {
 			statement3.setInt(1, category.categoryID);
 			ResultSet rs= statement3.executeQuery();
 			rs.next();
-			Double total = rs.getDouble("Category_total");
-			Double spent = rs.getDouble("Category_spent");
+			Double categoryTotal = rs.getDouble("Category_total");
+			Double categorySpent = rs.getDouble("Category_spent");
 			PreparedStatement statement2=conn.prepareStatement("DELETE FROM SanityDB.Category WHERE Category_id=?");
 			statement2.setInt(1, category.categoryID);
 			statement2.executeUpdate();
-			PreparedStatement statement4 = conn.prepareStatement("UPDATE SanityDB.Budget SET Budget_name=?"
+			PreparedStatement statement5 = conn.prepareStatement("SELECT FROM SanityDB.Budget WHERE Budget_id=?");
+			statement5.setInt(1, category.budgetID);
+			ResultSet budget =statement5.executeQuery();
+			budget.next();
+			Double budgetTotal = budget.getDouble("Budget_total");
+			Double budgetSpent = budget.getDouble("Budget_spent");
+			PreparedStatement statement4 = conn.prepareStatement("UPDATE SanityDB.Budget SET"
 					+ "WHERE Budget_id=?");
 			
 		}catch (SQLException e) {
