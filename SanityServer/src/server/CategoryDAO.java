@@ -38,6 +38,27 @@ public class CategoryDAO extends DAO{
 		return returnMessage;	
 	}
 	
+	public JSONObject deleteCategories(User user,Budget budget, Category category){
+		JSONObject returnMessage = new JSONObject();
+		try{
+			returnMessage.put("function", "deleteCategory");
+			Integer userID= UserFindUserID(user);
+			category.userID=userID;
+			budget.userId=userID;
+			BudgetFindBudgetID(budget);
+			category.budgetID=budget.budgetId;
+			CategoryFindCategoryID(category);
+			dropCategory(category);
+		}catch(JSONException e){
+			System.out.println(e.getMessage());
+			System.out.println("JSON error in deleteCategory");
+		}catch(SQLException e){
+			System.out.println(e.getMessage());
+			System.out.println("SQL error in deleteCategory");
+		}
+		return returnMessage;
+	}
+	
 	private void insertCategory(Budget budget) throws SQLException{
 		Connection conn = getDBConnection();
 		BudgetFindBudgetID(budget);

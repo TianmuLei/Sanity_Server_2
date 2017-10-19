@@ -192,6 +192,7 @@ public class BudgetDAO extends DAO{
 			Connection conn=getDBConnection();
 			// find the original budget and then update;
 			BudgetFindUserID(toEdit);
+			original.userId=toEdit.userId;
 			BudgetFindBudgetID(original);
 			toEdit.budgetId=original.budgetId;
 		//	toEdit.userId=toEdit.userId;

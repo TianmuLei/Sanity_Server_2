@@ -10,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.mysql.jdbc.RowDataCursor;
+
 public class DAO {
 	protected Connection getDBConnection() {
 		Connection dbConnection = null;
@@ -204,8 +206,6 @@ public class DAO {
 				long remain=DateCal.getRemian(endDate);
 				temp.put("remain", remain);
 				
-				
-				
 				Jarray.put(temp);
 			}
 		}catch(JSONException e){
@@ -302,5 +302,29 @@ public class DAO {
 			System.out.println("getTransactions error");
 		}
 		return transList;
+	}
+	
+	protected void dropCategory(Category category){
+		try{
+			Connection conn= getDBConnection();
+			PreparedStatement statement=conn.prepareStatement("DELETE FROM SanityDB.Transaction WHERE Category_id=?");
+			statement.setInt(1, category.categoryID);
+			statement.executeUpdate();
+			PreparedStatement statement3 = conn.prepareStatement("SELECT * FROM SanityDB.Category WHERE Category_id=?");
+			statement3.setInt(1, category.categoryID);
+			ResultSet rs= statement3.executeQuery();
+			rs.next();
+			Double total = rs.getDouble("Category_total");
+			Double spent = rs.getDouble("Category_spent");
+			PreparedStatement statement2=conn.prepareStatement("DELETE FROM SanityDB.Category WHERE Category_id=?");
+			statement2.setInt(1, category.categoryID);
+			statement2.executeUpdate();
+			PreparedStatement statement4 = conn.prepareStatement("UPDATE SanityDB.Budget SET Budget_name=?"
+					+ "WHERE Budget_id=?");
+			
+		}catch (SQLException e) {
+			System.out.println(e.getMessage());
+			System.out.println("drop category error");
+		}
 	}
 }
