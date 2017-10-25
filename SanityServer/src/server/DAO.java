@@ -1,5 +1,6 @@
 package server;
 
+import java.net.ProtocolException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -256,7 +257,7 @@ public class DAO {
 		return Jarray;
 	}
 	
-	public JSONArray getTransactionsDB(User user, Budget budget, Category category){
+	protected JSONArray getTransactionsDB(User user, Budget budget, Category category){
 		JSONArray transList= new JSONArray();
 		try{
 			category.userID =UserFindUserID(user);
@@ -331,6 +332,16 @@ public class DAO {
 		}catch (SQLException e) {
 			System.out.println(e.getMessage());
 			System.out.println("drop category error");
+		}
+	}
+	
+	protected JSONArray fetchAllData(String email,Integer period){
+		try{
+			Connection conn = getDBConnection();
+			
+		}catch(SQLException e){
+			System.out.println(e.getMessage());
+			System.out.println("fetch all data error");
 		}
 	}
 }

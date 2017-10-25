@@ -186,10 +186,13 @@ public class Server extends WebSocketServer {
 					System.out.println("null return message");
 				}
 				if(returnMessage.getString("status").equals("success")){
+					//System.out.println("success");
 					JSONObject info=budgetDao.getEverything(user, 0);
+					//System.out.println("a");
 					returnMessage.put("information", info.getJSONObject("information"));
 				}
-				sendMessagetoClient(conn, returnMessage);	
+				sendMessagetoClient(conn, returnMessage);
+				System.out.println("message sent");
 			}
 		}catch(JSONException e){
 			

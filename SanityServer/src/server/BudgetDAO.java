@@ -85,16 +85,19 @@ public class BudgetDAO extends DAO{
 	
 	public JSONObject editBudget(Budget toEdit, Budget original){
 		JSONObject message = new JSONObject();
+		System.out.println("into the editBudget");
 		try{
-			
 			message.put("function", "editBudget");
 			if(checkBudgetExist(toEdit)){
 				message.put("status", "fail");
 				message.put("detail", "duplicated budget name");
+				System.out.println("check existed ");
 			}
 			else{
+				System.out.println("before edit budget db");
 				editBudgetDB(toEdit,original);
 				message.put("status", "success");
+				System.out.println("edit budget finish");
 			}
 		}catch (JSONException e) {
 			System.out.println(e.getMessage());
