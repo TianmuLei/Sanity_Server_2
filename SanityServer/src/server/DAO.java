@@ -335,13 +335,108 @@ public class DAO {
 		}
 	}
 	
-	protected JSONArray fetchAllData(String email,Integer period){
+	protected JSONObject fetchAllData(String email,Integer period){
+		JSONObject returnMessage = new JSONObject();
 		try{
 			Connection conn = getDBConnection();
+			PreparedStatement statement=conn.prepareStatement("SELECT * FROM SanityDB.Sanity_budget WHERE Email=?");
+			statement.setString(1, email);
+			JSONArray budgetList = new JSONArray();
+			ResultSet rs=statement.executeQuery();
+			while(rs.next()){
+				JSONObject temp = new JSONObject();
+				temp.put("name", rs.getString("Budget_name"));
+				String start = rs.getDate("Start_date").toString();
+				temp.put("date", start);
+				temp.put("budgetTotal", rs.getDouble("Budget_total"));
+				temp.put("budgetSpent", 0);
+				temp.put("threshold", rs.getInt("Threshold"));
+				temp.put("frequency", rs.getInt("Frequency"));
+				temp.put("period", rs.getInt("Budget_period"));
+				
+				String startDate = DateCal.calculateCurrentStart(start, period,0);
+				String endDate = DateCal.getEndDate(startDate, period);
+				long remain =DateCal.getRemian(endDate);
+				temp.put("remain", remain);
+				budgetList.put(temp);
+			}
+			if(rs!=null){
+				rs.close();
+			}
+			if(statement!=null){
+				statement.close();
+			}
+			for(int j=0;j<budgetList.length();j++){
+				JSONObject budgetJSON=(JSONObject) budgetList.get(j);
+				JSONArray categoryList=new JSONArray();
+				PreparedStatement st=conn.prepareStatement("SELECT * FROM SanityDB.Sanity_category WHERE Budget_name=? AND Email=?");
+				st.setString(1, budgetJSON.getString("name"));
+				st.setString(2, email);
+				ResultSet categoryResult=st.executeQuery();
+				while(categoryResult.next()){
+					JSONObject temp = new JSONObject();
+					temp.put("name", rs.getString("Category_name"));
+					temp.put("limit", rs.getDouble("Category_total"));
+					temp.put("categorySpent",0);
+					temp.put("budgetName", budgetJSON.getString("name"));
+					temp.put("requestPeriod", period);
+					categoryList.put(temp);
+				}
+				budgetJSON.put("categoryList",categoryList);
+				if(categoryResult!=null){
+					categoryResult.close();
+				}
+				if(st!=null){
+					st.close();
+				}
+			}
 			
+			for(int i=0;i<budgetList.length();i++){
+				JSONObject budget = (JSONObject)budgetList.get(i);
+				JSONArray categoryList = budget.getJSONArray("categoryList");
+				for(int j=0; j<categoryList.length();++j){
+					JSONObject category=(JSONObject)categoryList.get(j);
+					PreparedStatement getTransaction = conn.prepareStatement("SELECT * FROM Sanity.transaction WHERE Budget_name=? AND"
+							+ " Category_name=? AND Email=? AND Transaction_date >= ? AND Transaction_date <=?");
+					getTransaction.setString(1, category.getString("budgetName"));
+					getTransaction.setString(2, category.getString("name"));
+					getTransaction.setString(3, email);
+					String date = budget.getString("date");
+					Integer budgetPeriod = budget.getInt("period");
+					String startDate=DateCal.calculateCurrentStart(date, budgetPeriod, period);
+					String endDate =DateCal.getEndDate(startDate, budgetPeriod);
+					getTransaction.setDate(4, java.sql.Date.valueOf(startDate));
+					getTransaction.setDate(5,java.sql.Date.valueOf(endDate));
+					ResultSet transactions=getTransaction.executeQuery();
+					JSONArray transactionList = new JSONArray();
+					while(transactions.next()){
+						JSONObject temp = new JSONObject();
+						temp.put("description", transactions.getString("Transaction_description"));
+						temp.put("amount", transactions.getDouble("Transaction_amount"));
+						temp.put("date", transactions.getDate("Transaction_date").toString());
+						temp.put("budgetName", transactions.getString("Budget_name"));
+						temp.put("categoryName", transactions.getString("Category_name"));
+						transactionList.put(temp);
+					}
+					category.put("transactionList", transactionList);
+					if(transactions!=null){
+						transactions.close();
+					}
+					if(getTransaction!=null){
+						getTransaction.close();
+					}
+				}
+			}	
+			if(conn!=null){
+				conn.close();
+			}
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
-			System.out.println("fetch all data error");
+			System.out.println("fetch all data SQL error");
+		}catch(JSONException e){
+			System.out.println(e.getMessage());
+			System.out.println("fetch all data JSON error");
 		}
+		return returnMessage;
 	}
 }
