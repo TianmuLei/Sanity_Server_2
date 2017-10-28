@@ -230,7 +230,7 @@ public class Server extends WebSocketServer {
 	
 	public static void main( String[] args ) throws InterruptedException , IOException {
 		WebSocketImpl.DEBUG = true;
-		int port = 9999; // 843 flash policy port
+		int port = 9998; // 843 flash policy port
 		Server s = new Server( port );
 		s.start();
 		System.out.println( "ChatServer started on port: " + s.getPort() );
