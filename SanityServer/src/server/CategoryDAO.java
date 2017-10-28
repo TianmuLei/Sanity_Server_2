@@ -38,23 +38,15 @@ public class CategoryDAO extends DAO{
 		return returnMessage;	
 	}
 	
-	public JSONObject deleteCategories(User user,Budget budget, Category category){
+	public JSONObject deleteCategories(String email,String budgetName, String categoryName){
 		JSONObject returnMessage = new JSONObject();
 		try{
 			returnMessage.put("function", "deleteCategory");
-			Integer userID= UserFindUserID(user);
-			category.userID=userID;
-			budget.userId=userID;
-			BudgetFindBudgetID(budget);
-			category.budgetID=budget.budgetId;
-			CategoryFindCategoryID(category);
-			dropCategory(category);
+			dropCategory(email,budgetName,categoryName);
+			returnMessage.put("status", "success");
 		}catch(JSONException e){
 			System.out.println(e.getMessage());
 			System.out.println("JSON error in deleteCategory");
-		}catch(SQLException e){
-			System.out.println(e.getMessage());
-			System.out.println("SQL error in deleteCategory");
 		}
 		return returnMessage;
 	}
@@ -83,6 +75,40 @@ public class CategoryDAO extends DAO{
 		}
 		if(conn!=null){
 			conn.close();
+		}
+	}
+	
+	private void dropCategory(String email, String budgetName, String categoryName){
+		try{
+			Connection conn= getDBConnection();
+			PreparedStatement getCategoryID=conn.prepareStatement("SELECT * FROM SanityDB.Sanity_category WHERE Email=? AND"
+					+ " Budget_name=? AND Category_name=?");
+			getCategoryID.setString(1, email);
+			getCategoryID.setString(2, budgetName);
+			getCategoryID.setString(3, categoryName);
+			ResultSet resultSet=getCategoryID.executeQuery();
+			Integer categoryID=-1;
+			if(resultSet.next()){
+				categoryID = resultSet.getInt("Category_id");
+			}
+			if(resultSet!=null){
+				resultSet.close();
+			}
+			if(getCategoryID!=null){
+				getCategoryID.close();
+			}
+			PreparedStatement deleteCategory = conn.prepareStatement("DELETE FROM SanityDB.Category WHERE Category_id=?");
+			deleteCategory.setInt(1, categoryID);
+			deleteCategory.executeUpdate();
+			if(deleteCategory!=null){
+				deleteCategory.close();
+			}
+			if(conn!=null){
+				conn.close();
+			}
+		}catch (SQLException e) {
+			System.out.println(e.getMessage());
+			System.out.println("drop category SQL error");
 		}
 	}
 }

@@ -1,6 +1,5 @@
 package server;
 
-import java.net.ProtocolException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,8 +9,6 @@ import java.sql.SQLException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.mysql.jdbc.RowDataCursor;
 
 public class DAO {
 	protected Connection getDBConnection() {
@@ -305,35 +302,7 @@ public class DAO {
 		return transList;
 	}
 	
-	protected void dropCategory(Category category){
-		try{
-			Connection conn= getDBConnection();
-			PreparedStatement statement=conn.prepareStatement("DELETE FROM SanityDB.Transaction WHERE Category_id=?");
-			statement.setInt(1, category.categoryID);
-			statement.executeUpdate();
-			PreparedStatement statement3 = conn.prepareStatement("SELECT * FROM SanityDB.Category WHERE Category_id=?");
-			statement3.setInt(1, category.categoryID);
-			ResultSet rs= statement3.executeQuery();
-			rs.next();
-			Double categoryTotal = rs.getDouble("Category_total");
-			Double categorySpent = rs.getDouble("Category_spent");
-			PreparedStatement statement2=conn.prepareStatement("DELETE FROM SanityDB.Category WHERE Category_id=?");
-			statement2.setInt(1, category.categoryID);
-			statement2.executeUpdate();
-			PreparedStatement statement5 = conn.prepareStatement("SELECT FROM SanityDB.Budget WHERE Budget_id=?");
-			statement5.setInt(1, category.budgetID);
-			ResultSet budget =statement5.executeQuery();
-			budget.next();
-			Double budgetTotal = budget.getDouble("Budget_total");
-			Double budgetSpent = budget.getDouble("Budget_spent");
-			PreparedStatement statement4 = conn.prepareStatement("UPDATE SanityDB.Budget SET"
-					+ "WHERE Budget_id=?");
-			
-		}catch (SQLException e) {
-			System.out.println(e.getMessage());
-			System.out.println("drop category error");
-		}
-	}
+
 	
 	protected JSONObject fetchAllData(String email,Integer period){
 		JSONObject returnMessage = new JSONObject();

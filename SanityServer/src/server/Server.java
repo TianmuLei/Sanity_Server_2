@@ -183,17 +183,22 @@ public class Server extends WebSocketServer {
 				Budget old=new Budget(JSONMessage.getJSONObject("information").getString("oldName"));
 				JSONObject returnMessage=budgetDao.editBudget(toAdd, old);
 				User user = new User(JSONMessage.getJSONObject("information").getString("email"));
-				if(returnMessage==null){
-					System.out.println("null return message");
-				}
 				if(returnMessage.getString("status").equals("success")){
-					//System.out.println("success");
 					JSONObject info=budgetDao.getEverything(user, 0);
-					//System.out.println("a");
 					returnMessage.put("information", info.getJSONObject("information"));
 				}
 				sendMessagetoClient(conn, returnMessage);
-				System.out.println("message sent");
+			}
+			else if (message1.equals("deleteCategory")){
+				String email = JSONMessage.getJSONObject("information").getString("email");
+				String budgetName = JSONMessage.getJSONObject("information").getString("budgetName");
+				String categoryName = JSONMessage.getJSONObject("information").getString("categoryName");
+				JSONObject returnMessage =budgetDao.CateDao.deleteCategories(email, budgetName, categoryName);
+				if(returnMessage.getString("status").equals("success")){
+					JSONObject info=budgetDao.getEverything(new User(email), 0);
+					returnMessage.put("information", info.getJSONObject("information"));
+				}
+				sendMessagetoClient(conn, returnMessage);
 			}
 		}catch(JSONException e){
 			

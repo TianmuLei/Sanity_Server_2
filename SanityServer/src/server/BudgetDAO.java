@@ -90,13 +90,17 @@ public class BudgetDAO extends DAO{
 		JSONObject message = new JSONObject();
 		System.out.println("into the editBudget");
 		try{
+			Boolean allowEdit =true;
 			message.put("function", "editBudget");
-			if(checkBudgetExist(toEdit)){
-				message.put("status", "fail");
-				message.put("detail", "duplicated budget name");
-				System.out.println("check existed ");
-			}
-			else{
+			if(toEdit.budgetName!=original.budgetName){
+				if(checkBudgetExist(toEdit)){
+					message.put("status", "fail");
+					message.put("detail", "duplicated budget name");
+					System.out.println("check existed ");
+					allowEdit=false;
+				}
+			}      
+			if(allowEdit){
 				System.out.println("before edit budget db");
 				editBudgetDB(toEdit,original);
 				message.put("status", "success");
@@ -196,23 +200,44 @@ public class BudgetDAO extends DAO{
 		try{
 			Connection conn=getDBConnection();
 			// find the original budget and then update;
-			BudgetFindUserID(toEdit);
-			original.userId=toEdit.userId;
-			BudgetFindBudgetID(original);
-			toEdit.budgetId=original.budgetId;
-		//	toEdit.userId=toEdit.userId;
+			Integer userID =-1;
+			Integer budgetID=-1;
+			PreparedStatement findUserID = conn.prepareStatement("SELECT * FROM SanityDB.Sanity_DB WHERE Email=? AND Budget_name=?");
+			findUserID.setString(1, toEdit.email);
+			findUserID.setString(2, original.budgetName);
+			ResultSet resultSet=findUserID.executeQuery();
+			if(resultSet.next()){
+				userID=resultSet.getInt("User_id");
+				budgetID=resultSet.getInt("Budget_id");
+			}
+			if(resultSet!=null){
+				resultSet.close();
+			}
+			if(findUserID!=null){
+				findUserID.close();
+			}
+//			BudgetFindUserID(toEdit);
+//			original.userId=toEdit.userId;
+//			BudgetFindBudgetID(original);
+//			toEdit.budgetId=original.budgetId;
+//			toEdit.userId=toEdit.userId;
 			PreparedStatement updateStatement = conn.prepareStatement("UPDATE SanityDB.Budget SET Budget_name=?"
 					+ ",Budget_period=?,"
 					+ "Frequency=?,Threshold=? WHERE Budget_id=? AND User_id=?");
 			updateStatement.setString(1, toEdit.budgetName);
 			updateStatement.setInt(2, toEdit.period);
 			//updateStatement.setDate(3, java.sql.Date.valueOf(toEdit.date));
-			//updateStatement.setDouble(4, toEdit.budgetTotal);
 			updateStatement.setInt(3, toEdit.frequency);
 			updateStatement.setInt(4, toEdit.threshold);
-			updateStatement.setInt(5, toEdit.budgetId);
-			updateStatement.setInt(6, toEdit.userId);
+			updateStatement.setInt(5, budgetID);
+			updateStatement.setInt(6, userID);
 			updateStatement.executeUpdate();
+			if(updateStatement!=null){
+				updateStatement.close();
+			}
+			if(conn!=null){
+				conn.close();
+			}
 			return true;
 		}catch(SQLException e){
 			System.out.println("editBudgetDB Error");
