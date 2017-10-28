@@ -15,54 +15,55 @@ public class BudgetDAO extends DAO{
 		CateDao = new CategoryDAO();
 	}
 	public JSONObject getEverything(User user,Integer period){
-		JSONObject returnMessage = new JSONObject();
-		try{
-			JSONArray budgetList=getBudgetListDB(user);
-			System.out.println(budgetList.length());
-			for(int i=0;i<budgetList.length();++i){
-				JSONObject budgetJSON=budgetList.getJSONObject(i);
-				Budget budget=new Budget(budgetJSON,period);
-				budget.email=user.email;
-				JSONArray categoryList= getCategoriesListDB(user,budget);
-				for(int j=0;j<categoryList.length();j++){
-					JSONObject categoryJSON=(JSONObject) categoryList.get(j);
-					Category category=new Category(categoryJSON.getString("name"));
-					JSONArray TransList=getTransactionsDB(user,budget,category); 
-					categoryJSON.put("transactionList", TransList);
-				}
-				budgetJSON.put("categoryList",categoryList);
-			}
-			for(int i=0;i<budgetList.length();++i){
-				JSONObject budgetJSON=budgetList.getJSONObject(i);
-				JSONArray categoryList=budgetJSON.getJSONArray("categoryList");
-				int tranSpent=0;
-				for(int j=0;j<categoryList.length();j++){
-					JSONObject categoryJSON=(JSONObject) categoryList.get(j);
-					JSONArray TransList=categoryJSON.getJSONArray("transactionList");
-					double cateSpent=0;
-					for(int k=0;k<TransList.length();k++){
-						cateSpent+=TransList.getJSONObject(k).getDouble("amount");
-					}
-					categoryJSON.remove("categorySpent");
-					categoryJSON.put("categorySpent",cateSpent);
-					tranSpent+=cateSpent;
-				}
-				budgetJSON.remove("budgetSpent");
-				budgetJSON.put("budgetSpent", tranSpent);
-				
-			}
-			JSONObject info = new JSONObject();
-			info.put("budgetLsit", budgetList);
-			returnMessage.put("function", "returnEverything");
-			returnMessage.put("information", info);
-		}catch(SQLException e){
-			System.out.println(e.getMessage());
-			System.out.println("get Everything error");
-		}catch (JSONException e) {
-			System.out.println(e.getMessage());
-			System.out.println("get Everything JSON error");
-		}
-		return returnMessage;
+		return fetchAllData(user.email,period);
+//		JSONObject returnMessage = new JSONObject();
+//		try{
+//			JSONArray budgetList=getBudgetListDB(user);
+//			System.out.println(budgetList.length());
+//			for(int i=0;i<budgetList.length();++i){
+//				JSONObject budgetJSON=budgetList.getJSONObject(i);
+//				Budget budget=new Budget(budgetJSON,period);
+//				budget.email=user.email;
+//				JSONArray categoryList= getCategoriesListDB(user,budget);
+//				for(int j=0;j<categoryList.length();j++){
+//					JSONObject categoryJSON=(JSONObject) categoryList.get(j);
+//					Category category=new Category(categoryJSON.getString("name"));
+//					JSONArray TransList=getTransactionsDB(user,budget,category); 
+//					categoryJSON.put("transactionList", TransList);
+//				}
+//				budgetJSON.put("categoryList",categoryList);
+//			}
+//			for(int i=0;i<budgetList.length();++i){
+//				JSONObject budgetJSON=budgetList.getJSONObject(i);
+//				JSONArray categoryList=budgetJSON.getJSONArray("categoryList");
+//				int tranSpent=0;
+//				for(int j=0;j<categoryList.length();j++){
+//					JSONObject categoryJSON=(JSONObject) categoryList.get(j);
+//					JSONArray TransList=categoryJSON.getJSONArray("transactionList");
+//					double cateSpent=0;
+//					for(int k=0;k<TransList.length();k++){
+//						cateSpent+=TransList.getJSONObject(k).getDouble("amount");
+//					}
+//					categoryJSON.remove("categorySpent");
+//					categoryJSON.put("categorySpent",cateSpent);
+//					tranSpent+=cateSpent;
+//				}
+//				budgetJSON.remove("budgetSpent");
+//				budgetJSON.put("budgetSpent", tranSpent);
+//				
+//			}
+//			JSONObject info = new JSONObject();
+//			info.put("budgetLsit", budgetList);
+//			returnMessage.put("function", "returnEverything");
+//			returnMessage.put("information", info);
+//		}catch(SQLException e){
+//			System.out.println(e.getMessage());
+//			System.out.println("get Everything error");
+//		}catch (JSONException e) {
+//			System.out.println(e.getMessage());
+//			System.out.println("get Everything JSON error");
+//		}
+//		return returnMessage;
 	}
 
 	public JSONObject getBudgetList(User user) {
