@@ -375,8 +375,8 @@ public class DAO {
 				ResultSet categoryResult=st.executeQuery();
 				while(categoryResult.next()){
 					JSONObject temp = new JSONObject();
-					temp.put("name", rs.getString("Category_name"));
-					temp.put("limit", rs.getDouble("Category_total"));
+					temp.put("name", categoryResult.getString("Category_name"));
+					temp.put("limit", categoryResult.getDouble("Category_total"));
 					temp.put("categorySpent",0);
 					temp.put("budgetName", budgetJSON.getString("name"));
 					temp.put("requestPeriod", period);
@@ -396,7 +396,7 @@ public class DAO {
 				JSONArray categoryList = budget.getJSONArray("categoryList");
 				for(int j=0; j<categoryList.length();++j){
 					JSONObject category=(JSONObject)categoryList.get(j);
-					PreparedStatement getTransaction = conn.prepareStatement("SELECT * FROM Sanity.transaction WHERE Budget_name=? AND"
+					PreparedStatement getTransaction = conn.prepareStatement("SELECT * FROM SanityDB.Sanity_transaction WHERE Budget_name=? AND"
 							+ " Category_name=? AND Email=? AND Transaction_date >= ? AND Transaction_date <=?");
 					getTransaction.setString(1, category.getString("budgetName"));
 					getTransaction.setString(2, category.getString("name"));
