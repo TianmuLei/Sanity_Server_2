@@ -420,9 +420,6 @@ public class DAO {
 			info.put("budgetLsit", budgetList);
 			returnMessage.put("function", "returnEverything");
 			returnMessage.put("information", info);
-			
-			
-			
 			if(conn!=null){
 				conn.close();
 			}
@@ -434,5 +431,80 @@ public class DAO {
 			System.out.println("fetch all data JSON error");
 		}
 		return returnMessage;
+	}
+	protected void deleteCategoryDB(String email, String budgetName, String categoryName){
+		try{
+			Connection conn= getDBConnection();
+			PreparedStatement getCategoryID=conn.prepareStatement("SELECT * FROM SanityDB.Sanity_category WHERE Email=? AND"
+					+ " Budget_name=? AND Category_name=?");
+			getCategoryID.setString(1, email);
+			getCategoryID.setString(2, budgetName);
+			getCategoryID.setString(3, categoryName);
+			ResultSet resultSet=getCategoryID.executeQuery();
+			Integer categoryID=-1;
+			if(resultSet.next()){
+				categoryID = resultSet.getInt("Category_id");
+			}
+			if(resultSet!=null){
+				resultSet.close();
+			}
+			if(getCategoryID!=null){
+				getCategoryID.close();
+			}
+			deleteTransactionWithCategory(categoryID,conn);
+			PreparedStatement deleteCategory = conn.prepareStatement("DELETE FROM SanityDB.Category WHERE Category_id=?");
+			deleteCategory.setInt(1, categoryID);
+			deleteCategory.executeUpdate();
+			if(deleteCategory!=null){
+				deleteCategory.close();
+			}
+			if(conn!=null){
+				conn.close();
+			}
+		}catch (SQLException e) {
+			System.out.println(e.getMessage());
+			System.out.println("delete category SQL error");
+		}
+	}
+	protected void deleteTransactionWithCategory(Integer categoryID,Connection conn){
+		try{
+			PreparedStatement deleteTransaction = conn.prepareStatement("DELETE FROM SanityDB.Transaction WHERE Category_id=?");
+			deleteTransaction.setInt(1, categoryID);
+			deleteTransaction.executeUpdate();
+			if(deleteTransaction!=null){
+				deleteTransaction.close();
+			}
+			
+		}catch (SQLException e) {
+			System.out.println(e.getMessage());
+			System.out.println("delete Transaction with category error");
+		}
+	}
+	protected void deleteCategoryWithBudget(Integer budgetID,Connection conn){
+		deleteTransacitonWithBudget(budgetID, conn);
+		try{
+			PreparedStatement deleteCategory = conn.prepareStatement("DELETE FROM SanityDB.Category WHERE Budget_id=?");
+			deleteCategory.setInt(1, budgetID);
+			deleteCategory.executeUpdate();
+			if(deleteCategory!=null){
+				deleteCategory.close();
+			}
+		}catch (SQLException e) {
+			System.out.println(e.getMessage());
+			System.out.println("deleteCategoryWithBudget SQL error");
+		}
+	}
+	protected void deleteTransacitonWithBudget(Integer budgetID,Connection conn){
+		try{
+			PreparedStatement deleteTransaction= conn.prepareStatement("DELETE FROM SanityDB.Transaction WHERE Budget_id=?");
+			deleteTransaction.setInt(1, budgetID);
+			deleteTransaction.executeUpdate();
+			if(deleteTransaction!=null){
+				deleteTransaction.close();
+			}
+		}catch (SQLException e) {
+			System.out.println(e.getMessage());
+			System.out.println("deleteTransactionWithBudget SQL error");
+		}
 	}
 }

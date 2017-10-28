@@ -189,6 +189,16 @@ public class Server extends WebSocketServer {
 				}
 				sendMessagetoClient(conn, returnMessage);
 			}
+			else if(message1.equals("deleteBudget")){
+				String email = JSONMessage.getJSONObject("information").getString("email");
+				String budgetName = JSONMessage.getJSONObject("information").getString("budgetName");
+				JSONObject returnMessage = budgetDao.deleteBudget(email, budgetName);
+				if(returnMessage.getString("status").equals("success")){
+					JSONObject info=budgetDao.getEverything(new User(email), 0);
+					returnMessage.put("information", info.getJSONObject("information"));
+				}
+				sendMessagetoClient(conn, returnMessage);
+			}
 			else if (message1.equals("deleteCategory")){
 				String email = JSONMessage.getJSONObject("information").getString("email");
 				String budgetName = JSONMessage.getJSONObject("information").getString("budgetName");

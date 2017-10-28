@@ -75,7 +75,7 @@ public class TransactionDAO extends DAO{
 	public JSONObject deleteTransaction(Transaction transaction){
 		JSONObject returnMessage = new JSONObject();
 		try{
-			returnMessage.put("function", "createTransaction");
+			returnMessage.put("function", "deleteTransaction");
 			TransactionFindUserID(transaction);
 			TransactionFindBudgetID(transaction);
 			TransactionFindCategoryID(transaction);

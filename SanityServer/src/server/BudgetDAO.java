@@ -15,7 +15,6 @@ public class BudgetDAO extends DAO{
 		CateDao = new CategoryDAO();
 	}
 	public JSONObject getEverything(User user,Integer period){
-		System.out.println("FETCHING DATA...");
 		return fetchAllData(user.email,period);
 		
 //		JSONObject returnMessage = new JSONObject();
@@ -138,7 +137,49 @@ public class BudgetDAO extends DAO{
 		}
 		return null;
 	}
-	
+	public JSONObject deleteBudget(String email, String budgetName){
+		JSONObject message = new JSONObject();
+		try{
+			message.put("function", "deleteBudget");
+			deleteBudgetDB(email, budgetName);
+			message.put("status", "success");
+		}catch (JSONException e) {
+			System.out.println(e.getMessage());
+			System.out.println("JSON error in deleteBudget");
+		}
+		return message;
+	}
+	private void deleteBudgetDB(String email, String budgetName){
+		Connection conn = getDBConnection();
+		try{
+			PreparedStatement getBudgetID = conn.prepareStatement("SELECT * FROM SanityDB.Sanity_budget WHERE Email=? AND Budget_name=?");
+			ResultSet resultSet =getBudgetID.executeQuery();
+			Integer budgetID=-1;
+			if(resultSet.next()){
+				budgetID=resultSet.getInt("Budget_id");
+			}
+			if(resultSet!=null){
+				resultSet.close();
+			}
+			if(getBudgetID!=null){
+				getBudgetID.close();
+			}
+			deleteCategoryWithBudget(budgetID, conn);
+			PreparedStatement deleteBudget = conn.prepareStatement("DELETE FROM SanityDB.Budget WHERE Budget_id=?");
+			deleteBudget.setInt(1, budgetID);
+			deleteBudget.executeUpdate();
+			if(deleteBudget!=null){
+				deleteBudget.close();
+			}
+			if(conn!=null){
+				conn.close();
+			}
+		}catch (SQLException e) {
+			System.out.println(e.getMessage());
+			System.out.println("SQL error in deleteBudgetDB");
+		}
+		
+	}
 	private Boolean checkBudgetExist(Budget toAdd) throws SQLException{
 		Connection conn=getDBConnection();
 		BudgetFindUserID(toAdd);
@@ -202,7 +243,7 @@ public class BudgetDAO extends DAO{
 			// find the original budget and then update;
 			Integer userID =-1;
 			Integer budgetID=-1;
-			PreparedStatement findUserID = conn.prepareStatement("SELECT * FROM SanityDB.Sanity_DB WHERE Email=? AND Budget_name=?");
+			PreparedStatement findUserID = conn.prepareStatement("SELECT * FROM SanityDB.Sanity_budget WHERE Email=? AND Budget_name=?");
 			findUserID.setString(1, toEdit.email);
 			findUserID.setString(2, original.budgetName);
 			ResultSet resultSet=findUserID.executeQuery();

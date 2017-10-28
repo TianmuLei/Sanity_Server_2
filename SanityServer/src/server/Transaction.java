@@ -18,7 +18,6 @@ public class Transaction {
 		}catch(JSONException e){
 			System.out.println(e.getMessage());
 			System.out.println("constructing transaction error");
-		}
-		
+		}		
 	}
 }
