@@ -92,6 +92,7 @@ public class Server extends WebSocketServer {
 				JSONObject returnMessage=userDao.Login(user);
 				if(returnMessage.getString("status").equals("success")){
 					JSONObject info=budgetDao.getEverything(user, 0);
+					System.out.println("FINISH FETCHING");
 					returnMessage.put("information", info.getJSONObject("information"));
 				}
 				

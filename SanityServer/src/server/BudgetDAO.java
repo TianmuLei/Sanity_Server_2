@@ -15,7 +15,9 @@ public class BudgetDAO extends DAO{
 		CateDao = new CategoryDAO();
 	}
 	public JSONObject getEverything(User user,Integer period){
+		System.out.println("FETCHING DATA...");
 		return fetchAllData(user.email,period);
+		
 //		JSONObject returnMessage = new JSONObject();
 //		try{
 //			JSONArray budgetList=getBudgetListDB(user);

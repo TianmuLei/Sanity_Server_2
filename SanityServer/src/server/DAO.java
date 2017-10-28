@@ -354,8 +354,8 @@ public class DAO {
 				temp.put("frequency", rs.getInt("Frequency"));
 				temp.put("period", rs.getInt("Budget_period"));
 				
-				String startDate = DateCal.calculateCurrentStart(start, period,0);
-				String endDate = DateCal.getEndDate(startDate, period);
+				String startDate = DateCal.calculateCurrentStart(start, temp.getInt("period"),0);
+				String endDate = DateCal.getEndDate(startDate, temp.getInt("period"));
 				long remain =DateCal.getRemian(endDate);
 				temp.put("remain", remain);
 				budgetList.put(temp);
