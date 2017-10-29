@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="SanityServer/java"/>
+	<classpathentry excluding="example/" kind="src" path="SanityServer/src"/>
+	<classpathentry kind="src" path="SanityServer/src/example"/>
+	<classpathentry kind="lib" path="SanityServer/java-json.jar"/>
+	<classpathentry kind="lib" path="SanityServer/mysql-connector-java-5.1.40-bin.jar"/>
+	<classpathentry kind="lib" path="SanityServer/org.springframework.beans.jar"/>
+	<classpathentry kind="lib" path="SanityServer/org.springframework.context.jar"/>
+	<classpathentry kind="lib" path="SanityServer/org.springframework.core.jar"/>
+	<classpathentry kind="lib" path="SanityServer/org.springframework.jdbc.jar"/>
+	<classpathentry kind="lib" path="SanityServer/org.springframework.transaction.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Users/yangchen/Sanity_Server_2/SanityServer/junit-4.10.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
