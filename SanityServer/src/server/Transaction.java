@@ -20,4 +20,12 @@ public class Transaction {
 			System.out.println("constructing transaction error");
 		}		
 	}
+	public Transaction(String email, String description, String category, String budget, String date, double amound){
+		this.email = email;
+		this.description = description;
+		this.category = category;
+		this.budget = budget;
+		this.date = date;
+		 this.amount = amound;
+	}
 }
