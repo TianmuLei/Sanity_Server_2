@@ -27,4 +27,8 @@ public class Category {
 		budgetID=-1;
 		userID=-1;
 	}
+	public Category(String cateName, int limit){
+		categoryName=cateName;
+		this.limit=limit;
+	}
 }
