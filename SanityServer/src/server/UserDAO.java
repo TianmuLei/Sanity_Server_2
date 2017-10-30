@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -185,22 +184,21 @@ public class UserDAO extends DAO{
 				upUser.setString( 1, user2.password1);
 				upUser.setString( 2, user2.password2);
 				upUser.setString( 3, user2.email);
-				upUser.execute();
+				upUser.executeUpdate();
 				message.put("status", "success");
 			 }	
 			 else{
 			 	message.put("status", "fail");
+			 	message.put("detail", "incorrect password");
 			 }	
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally{
 			if (conn != null) {
 				conn.close();
-			}
-			
+			}	
 		}
 		return message;		
 	}
