@@ -126,6 +126,7 @@ public class BudgetDAOTest {
 		try{
 			PreparedStatement st = conn.prepareStatement("SELECT* FROM SanityDB.Budget where Budget_Name='testing'");
 			ResultSet rs= st.executeQuery();
+			JSONObject getret =  test.createBudget(Btoadd);
 			assertEquals(false, rs.next());
 			
 			
@@ -133,7 +134,8 @@ public class BudgetDAOTest {
 			System.out.println(e.getMessage());
 			}
 		
-		JSONObject getret =  test.createBudget(Btoadd);
+		System.out.println("136");
+		
 		
 		 try {
 			if(conn != null && !conn.isClosed()){

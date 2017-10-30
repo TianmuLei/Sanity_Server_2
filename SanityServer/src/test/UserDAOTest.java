@@ -14,6 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import server.BudgetDAO;
 import server.DAO;
 import server.User;
 import server.UserDAO;
@@ -34,6 +35,9 @@ public class UserDAOTest {
 	
 	@Test
 	public void testRegister() throws JSONException {
+		BudgetDAO Bud = new BudgetDAO();
+		Bud.deleteBudget("yang@usc.edu", "qwer");
+		Bud.deleteBudget("yang@usc.edu", "testing");
 		User toadd = new User("yang", "yang@usc.edu", "123", "456");
 		
 		
@@ -83,6 +87,7 @@ public class UserDAOTest {
 		User toadd = new User("yang", "yang@usc.edu", "123", "456");
 		
 		JSONObject getret =  tests.Login(toadd);
+		System.out.println("\n Result for login: "+ getret.get("status") + "\n");
 		assertEquals("success", getret.get("status"));
 	}
 
@@ -103,7 +108,7 @@ public class UserDAOTest {
 			System.out.println(e.getMessage());
 		}
 		boolean a = tests.checkUserExist(toadd);
-		
+		System.out.println("User exist for yang@usc.edu: " + tests.checkUserExist(toadd)+"\n");
 		assertEquals(t, a);
 	}
 
