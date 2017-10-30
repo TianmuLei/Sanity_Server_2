@@ -115,6 +115,7 @@ public class UserDAO extends DAO{
 	public void addUser(User user) throws SQLException{
 		System.out.println("add user");
 		Connection conn=getDBConnection();
+		System.out.println(DAO.testing);
 		PreparedStatement st =  
 				conn.prepareStatement("INSERT INTO SanityDB.User (Username, Email, Password1, Password2) VALUE (?,?,?,?)");
 		st.setString( 1, user.username);

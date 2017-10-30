@@ -14,38 +14,28 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import server.DAO;
 import server.User;
 import server.UserDAO;
 
 public class UserDAOTest {
 	UserDAO tests = new UserDAO();
+	Connection conn;
 	@Before
 	public void setUp() throws Exception {
+		
+		conn = test.getSSLCon();
+		DAO.testing = 0;
 	}
 
 	@After
 	public void tearDown() throws Exception {
 	}
-	public Connection getDBConnection() {
-		Connection dbConnection = null;
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			System.out.println(e.getMessage());
-		}
-		try {
-			dbConnection= DriverManager.getConnection("jdbc:mysql://165.227.14.202:3306/SanityDB?user=root&password=chenyang&useSSL=false");		
-			return dbConnection;
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-		return dbConnection;
-	}
 	
 	@Test
 	public void testRegister() throws JSONException {
 		User toadd = new User("yang", "yang@usc.edu", "123", "456");
-		Connection conn = getDBConnection();
+		
 		
 		try{
 			PreparedStatement st = conn.prepareStatement("SELECT * FROM SanityDB.User WHERE Email=? ");
@@ -72,13 +62,23 @@ public class UserDAOTest {
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
 			}
+		
+		 try {
+			if(conn != null && !conn.isClosed()){
+			     conn.close();
+			 }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
 	
 	}
 
 	@Test
 	public void testLogin() throws JSONException {
 		User toadd = new User("yang", "yang@usc.edu", "123", "456");
-		Connection conn = getDBConnection();
+		
 		JSONObject getret =  tests.Login(toadd);
 		assertEquals("success", getret.get("status"));
 	}
@@ -86,7 +86,7 @@ public class UserDAOTest {
 	@Test
 	public void testCheckUserExist() throws SQLException {
 		User toadd = new User("yang", "yang@usc.edu", "123", "456");
-		Connection conn = getDBConnection();
+	
 		boolean t = true;
 		try{
 			PreparedStatement st = conn.prepareStatement("SELECT * FROM SanityDB.User WHERE Email=? ");
@@ -108,7 +108,7 @@ public class UserDAOTest {
 	@Test
 	public void testChangeUsername() throws SQLException {
 		User toadd = new User("chen", "yang@usc.edu", "123", "456");
-		Connection conn = getDBConnection();
+		
 		try{
 			PreparedStatement st = conn.prepareStatement("SELECT * FROM SanityDB.User WHERE Email=? ");
 			st.setString( 1, "yang@usc.edu");
@@ -139,7 +139,7 @@ public class UserDAOTest {
 	public void testChangePassword() throws SQLException {
 		User toadd = new User("chen", "yang@usc.edu", "123", "456");
 		User toadd2 = new User("chen", "yang@usc.edu", "321", "654");
-		Connection conn = getDBConnection();
+		
 		try{
 			PreparedStatement st = conn.prepareStatement("SELECT * FROM SanityDB.User WHERE Email=? ");
 			st.setString( 1, "yang@usc.edu");

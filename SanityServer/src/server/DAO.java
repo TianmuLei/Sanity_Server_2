@@ -11,8 +11,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class DAO {
+	public static int testing =1;
 	protected Connection getDBConnection() {
 		Connection dbConnection = null;
+		if(testing != 1){
+			try {
+				return test.getSSLCon();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
