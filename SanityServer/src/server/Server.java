@@ -223,6 +223,18 @@ public class Server extends WebSocketServer {
 				}
 				sendMessagetoClient(conn, returnMessage);
 			}
+			else if (message1.equals("addCategory")){
+				String email =JSONMessage.getJSONObject("information").getString("email");
+				String budgetName = JSONMessage.getJSONObject("information").getString("budgetName");
+				String categoryName = JSONMessage.getJSONObject("information").getString("categoryName");
+				Double limit = JSONMessage.getJSONObject("information").getDouble("limit");
+				JSONObject returnMessage=budgetDao.CateDao.addSingleCategory(email, budgetName,categoryName,limit);
+				if(returnMessage.getString("status").equals("sucess")){
+					JSONObject info=budgetDao.getEverything(new User(email), 0);
+					returnMessage.put("information", info.getJSONObject("information"));
+				}
+				sendMessagetoClient(conn, returnMessage);
+			}
 		}catch(JSONException e){
 			
 			System.out.println(e.getMessage());

@@ -10,7 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class CategoryDAO extends DAO{
-	public void addCategory(Budget budget){
+	public void addCategory(Budget budget){//add category from addBudget
 		try{
 			insertCategory(budget);
 		}catch(SQLException e){
@@ -18,7 +18,51 @@ public class CategoryDAO extends DAO{
 			System.out.println("Error in insertCategory");
 		}		
 	}
-
+	
+	public JSONObject addSingleCategory(String email, String budgetName,String categoryName,
+			Double limit){
+		JSONObject returnMessage = new JSONObject();
+		try{
+			Connection conn=getDBConnection();
+			PreparedStatement getID = conn.prepareStatement("SELECT * FROM SanityDB.Sanity_category WHERE "
+					+ "Email=? AND Budget_name =?");
+			ResultSet resultSet=getID.executeQuery();
+			Integer userID=-1;
+			Integer budgetID=-1;
+			if(resultSet.next()){
+				userID=resultSet.getInt("User_id");
+				budgetID=resultSet.getInt("Budget_id");
+			}
+			if(resultSet!=null){
+				resultSet.close();
+			}
+			if(getID!=null){
+				getID.close();
+			}
+			PreparedStatement insert = conn.prepareStatement("INSERT INTO SanityDB.Category(User_id, Category_name"
+					+ "Budget_id,Category_total,Category_spent) VALUE(?,?,?,?,?)");
+			insert.setInt(1, userID);
+			insert.setString(2, categoryName);
+			insert.setInt(3, budgetID);
+			insert.setDouble(4, limit);
+			insert.setDouble(5, 0);
+			insert.executeUpdate();
+			if(insert!=null){
+				insert.close();
+			}
+			if(conn!=null){
+				conn.close();
+			}
+			returnMessage.put("status", "success");
+		}catch (SQLException e) {
+			System.out.println(e.getMessage());
+			System.out.println("addSingleCategory SQL Error");
+		}catch(JSONException e){
+			System.out.println(e.getMessage());
+			System.out.println("addSingleCategory JSON Error ");
+		}
+		return returnMessage;
+	}
 	
 	public JSONObject getCategories(User user, Budget budget){
 		JSONObject returnMessage = new JSONObject();
