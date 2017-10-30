@@ -26,6 +26,8 @@ public class CategoryDAO extends DAO{
 			Connection conn=getDBConnection();
 			PreparedStatement getID = conn.prepareStatement("SELECT * FROM SanityDB.Sanity_category WHERE "
 					+ "Email=? AND Budget_name =?");
+			getID.setString(1, email);
+			getID.setString(2, budgetName);
 			ResultSet resultSet=getID.executeQuery();
 			Integer userID=-1;
 			Integer budgetID=-1;
@@ -39,7 +41,7 @@ public class CategoryDAO extends DAO{
 			if(getID!=null){
 				getID.close();
 			}
-			PreparedStatement insert = conn.prepareStatement("INSERT INTO SanityDB.Category(User_id, Category_name"
+			PreparedStatement insert = conn.prepareStatement("INSERT INTO SanityDB.Category(User_id, Category_name,"
 					+ "Budget_id,Category_total,Category_spent) VALUE(?,?,?,?,?)");
 			insert.setInt(1, userID);
 			insert.setString(2, categoryName);
