@@ -21,9 +21,9 @@ public class BudgetDAOTest {
 	Connection conn;
 	@Before
 	public void setUp() throws Exception {
+		DAO.testing = 0;
 		conn = test.getDBConnection();
 	}
-
 	@After
 	public void tearDown() throws Exception {
 	}
