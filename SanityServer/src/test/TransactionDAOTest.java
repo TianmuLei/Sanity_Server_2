@@ -41,6 +41,7 @@ public class TransactionDAOTest {
 			PreparedStatement getParameter = conn.prepareStatement("SELECT * FROM SanityDB.Sanity_transaction WHERE Email=? AND Budget_name=? AND Category_name=?");
 			PreparedStatement addTransaction =conn.prepareStatement("INSERT INTO SanityDB.Transaction"
 					+ " () VALUE()");
+			getParameter.setString(1, "yang@usc.edu");
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
 			System.out.println("testAddTransaction sql error");
