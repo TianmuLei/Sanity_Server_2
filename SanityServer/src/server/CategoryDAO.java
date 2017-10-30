@@ -102,10 +102,12 @@ public class CategoryDAO extends DAO{
 			returnMessage.put("function", "editCategory");
 			if(editCategoryDB(email,oldName,newName,budgetName,newLimit)){
 				returnMessage.put("status", "success");
+				System.out.println("Success");
 			}
 			else{
 				returnMessage.put("status", "fail");
 				returnMessage.put("detail", "duplicated category name");
+				System.out.println("fail");
 			}
 			
 		}catch(JSONException e){
@@ -122,14 +124,15 @@ public class CategoryDAO extends DAO{
 					+ "AND Email=? AND Budget_name=?");
 			checkCategory.setString(1, oldName);
 			checkCategory.setString(2, email);
-			checkCategory.setString(3, newName);
+			checkCategory.setString(3, budgetName);
 			ResultSet check = checkCategory.executeQuery();
-			if(check.next()){
+			if(check.wasNull()){
 				return false;
 			}
 			if(check!=null){
 				check.close();
 			}
+			System.out.println(1);
 			if(checkCategory!=null){
 				checkCategory.close();
 			}
@@ -138,7 +141,10 @@ public class CategoryDAO extends DAO{
 			getCategory.setString(1, oldName);
 			getCategory.setString(2, email);
 			getCategory.setString(3, oldName);
+			System.out.println(2);
 			ResultSet resultSet=getCategory.executeQuery();
+			
+			System.out.println(2);
 			Integer categoryID =-1;
 			if(resultSet.next()){
 				categoryID=resultSet.getInt("Category_id");
@@ -149,6 +155,7 @@ public class CategoryDAO extends DAO{
 			updateCategory.setDouble(2, newLimit);
 			updateCategory.setInt(3, categoryID);
 			updateCategory.executeUpdate();
+			System.out.println(3);
 			if(updateCategory!=null){
 				updateCategory.close();
 			}
