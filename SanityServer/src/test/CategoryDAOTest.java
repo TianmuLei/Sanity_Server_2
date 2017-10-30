@@ -72,11 +72,12 @@ public class CategoryDAOTest {
 		try{
 			PreparedStatement st = conn.prepareStatement("SELECT* FROM SanityDB.Category where Category_name='testing' AND Category_total = '150'");
 			ResultSet rs = st.executeQuery();
-			assertEquals(true, rs.next());
+			assertEquals(false, rs.next());
+			test.addSingleCategory("yang@usc.edu", "testing", "testing", 200.0);
 			
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
-			}
+		}
 	}
 
 
