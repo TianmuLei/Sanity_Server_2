@@ -155,6 +155,8 @@ public class BudgetDAO extends DAO{
 		Connection conn = getDBConnection();
 		try{
 			PreparedStatement getBudgetID = conn.prepareStatement("SELECT * FROM SanityDB.Sanity_budget WHERE Email=? AND Budget_name=?");
+			getBudgetID.setString(1, email);
+			getBudgetID.setString(2, budgetName);
 			ResultSet resultSet =getBudgetID.executeQuery();
 			Integer budgetID=-1;
 			if(resultSet.next()){
