@@ -12,11 +12,11 @@ import org.json.JSONObject;
 
 public class DAO {
 	public static int testing =1;
-	protected Connection getDBConnection() {
+	public Connection getDBConnection() {
 		Connection dbConnection = null;
 		if(testing != 1){
 			try {
-				return test.getSSLCon();
+				return dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/SanityDB?user=root&password=developer&useSSL=false");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

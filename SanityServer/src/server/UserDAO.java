@@ -121,10 +121,10 @@ public class UserDAO extends DAO{
 		st.setString( 2, user.email);
 		st.setString( 3, user.password1);
 		st.setString( 4, user.password2);
-		st.execute();
 		try{
 			 st.executeUpdate();		
 		}catch(SQLException e){
+			System.out.println("excaption at addUser");
 			System.out.println(e.getMessage());
 		}finally{
 			if (conn != null) {
@@ -181,6 +181,7 @@ public class UserDAO extends DAO{
 		try{
 			 if(verifyPassword(user1.email, user1.password1, user1.password2)){
 			 	PreparedStatement upUser = conn.prepareStatement("UPDATE  SanityDB.User SET Password1= ? and Password2 = ? WHERE Email = ?");
+			 	System.out.println(user2.password1 + user2.password2);
 				upUser.setString( 1, user2.password1);
 				upUser.setString( 2, user2.password2);
 				upUser.setString( 3, user2.email);

@@ -23,9 +23,9 @@ public class UserDAOTest {
 	Connection conn;
 	@Before
 	public void setUp() throws Exception {
-		
-		conn = test.getSSLCon();
 		DAO.testing = 0;
+		conn =tests.getDBConnection();
+		
 	}
 
 	@After
@@ -38,9 +38,12 @@ public class UserDAOTest {
 		
 		
 		try{
-			PreparedStatement st = conn.prepareStatement("SELECT * FROM SanityDB.User WHERE Email=? ");
+			PreparedStatement st = conn.prepareStatement("DELETE FROM SanityDB.User where Email='yang@usc.edu'");
+			st.executeUpdate();
+			st = conn.prepareStatement("SELECT * FROM SanityDB.User WHERE Email=? ");
 			st.setString( 1, "yang@usc.edu");
 			ResultSet rs = st.executeQuery();
+			System.out.println(rs.next());
 			if(rs.next()){
 				fail("Email already exist");
 			}
@@ -57,7 +60,7 @@ public class UserDAOTest {
 			st.setString( 3, "456");
 			ResultSet rs = st.executeQuery();
 			
-			assertEquals(1, rs.getFetchSize());
+			assertEquals(true, rs.next());
 			
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
@@ -158,7 +161,14 @@ public class UserDAOTest {
 			st.setString( 2, "321");
 			st.setString( 3, "654");
 			ResultSet rs = st.executeQuery();
-			assertEquals(true, rs.next());
+			boolean result= false;;
+			if(rs.next()){
+				result=true;
+			}
+			
+			assertEquals(true,result);
+			
+			
 			
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
