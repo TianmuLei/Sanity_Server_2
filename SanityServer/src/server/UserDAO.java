@@ -175,7 +175,6 @@ public class UserDAO extends DAO{
 				try {
 					message.put("function", "changePassword");
 				} catch (JSONException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 		try{
