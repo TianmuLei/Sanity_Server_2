@@ -180,7 +180,7 @@ public class UserDAO extends DAO{
 				}
 		try{
 			 if(verifyPassword(user1.email, user1.password1, user1.password2)){
-			 	PreparedStatement upUser = conn.prepareStatement("UPDATE  SanityDB.User SET Password1= ? and Password2 = ? WHERE Email = ?");
+			 	PreparedStatement upUser = conn.prepareStatement("UPDATE SanityDB.User SET Password1= ? and Password2 = ? WHERE Email = ?");
 			 	System.out.println(user2.password1 + user2.password2);
 				upUser.setString( 1, user2.password1);
 				upUser.setString( 2, user2.password2);
