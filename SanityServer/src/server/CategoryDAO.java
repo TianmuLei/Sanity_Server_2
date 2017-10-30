@@ -2,6 +2,7 @@ package server;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.json.JSONArray;
@@ -48,7 +49,72 @@ public class CategoryDAO extends DAO{
 		}
 		return returnMessage;
 	}
-	
+	public JSONObject editCategory(String email, String oldName, String newName, String budgetName,
+			Double newLimit){
+		JSONObject returnMessage = new JSONObject();
+		try{
+			returnMessage.put("function", "editCategory");
+			if(editCategoryDB(email,oldName,newName,budgetName,newLimit)){
+				returnMessage.put("status", "success");
+			}
+			else{
+				returnMessage.put("status", "fail");
+				returnMessage.put("detail", "duplicated category name");
+			}
+			
+		}catch(JSONException e){
+			System.out.println(e.getMessage());
+			System.out.println("JSON error in editCategory");
+		}
+		return returnMessage;
+	}
+	private Boolean editCategoryDB(String email, String oldName, String newName, String budgetName,
+			Double newLimit){
+		Connection conn =getDBConnection();
+		try{
+			PreparedStatement checkCategory = conn.prepareStatement("SELECT * FROM SanityDB.Sanity_category WHERE Category_name=? "
+					+ "AND Email=? AND Budget_name=?");
+			checkCategory.setString(1, oldName);
+			checkCategory.setString(2, email);
+			checkCategory.setString(3, newName);
+			ResultSet check = checkCategory.executeQuery();
+			if(check.next()){
+				return false;
+			}
+			if(check!=null){
+				check.close();
+			}
+			if(checkCategory!=null){
+				checkCategory.close();
+			}
+			PreparedStatement getCategory = conn.prepareStatement("SELECT * FROM SanityDB.Sanity_category WHERE Category_name=? "
+					+ "AND Email=? AND Budget_name=?");
+			getCategory.setString(1, oldName);
+			getCategory.setString(2, email);
+			getCategory.setString(3, oldName);
+			ResultSet resultSet=getCategory.executeQuery();
+			Integer categoryID =-1;
+			if(resultSet.next()){
+				categoryID=resultSet.getInt("Category_id");
+			}
+			PreparedStatement updateCategory = conn.prepareStatement("UPDATE SanityDB.Category SET Category_name=?"
+					+ ",Category_total=? WHERE Category_id=?");
+			updateCategory.setString(1, newName);
+			updateCategory.setDouble(2, newLimit);
+			updateCategory.setInt(3, categoryID);
+			updateCategory.executeUpdate();
+			if(updateCategory!=null){
+				updateCategory.close();
+			}
+			if(conn!=null){
+				conn.close();
+			}
+		}catch (SQLException e) {
+			System.out.println("SQL Error in editCategoryDB");
+			System.out.println(e.getMessage());
+		}
+		return true;	
+	}
 	private void insertCategory(Budget budget) throws SQLException{
 		Connection conn = getDBConnection();
 		BudgetFindBudgetID(budget);

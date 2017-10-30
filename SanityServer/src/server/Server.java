@@ -210,6 +210,19 @@ public class Server extends WebSocketServer {
 				}
 				sendMessagetoClient(conn, returnMessage);
 			}
+			else if (message1.equals("editCategory")){
+				String email = JSONMessage.getJSONObject("information").getString("email");
+				String budgetName = JSONMessage.getJSONObject("information").getString("budgetName");
+				String oldName = JSONMessage.getJSONObject("information").getString("categoryOldName");
+				String newName = JSONMessage.getJSONObject("information").getString("categoryNewName");
+				Double newLimit = JSONMessage.getJSONObject("information").getDouble("categoryNewLimit");
+				JSONObject returnMessage = budgetDao.CateDao.editCategory(email, oldName, newName, budgetName, newLimit);
+				if(returnMessage.getString("status").equals("sucess")){
+					JSONObject info=budgetDao.getEverything(new User(email), 0);
+					returnMessage.put("information", info.getJSONObject("information"));
+				}
+				sendMessagetoClient(conn, returnMessage);
+			}
 		}catch(JSONException e){
 			
 			System.out.println(e.getMessage());
