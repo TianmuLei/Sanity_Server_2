@@ -91,7 +91,9 @@ public class BudgetDAO extends DAO{
 		try{
 			Boolean allowEdit =true;
 			message.put("function", "editBudget");
-			if(toEdit.budgetName!=original.budgetName){
+			System.out.println("new name"+ toEdit.budgetName);
+			System.out.println("old name"+ original.budgetName);
+			if(!toEdit.budgetName.equals(original.budgetName)){
 				if(checkBudgetExist(toEdit)){
 					message.put("status", "fail");
 					message.put("detail", "duplicated budget name");
