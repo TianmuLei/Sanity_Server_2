@@ -191,7 +191,7 @@ public class Server extends WebSocketServer {
 			}
 			else if(message1.equals("deleteBudget")){
 				String email = JSONMessage.getJSONObject("information").getString("email");
-				String budgetName = JSONMessage.getJSONObject("information").getString("budgetName");
+				String budgetName = JSONMessage.getJSONObject("information").getString("name");
 				JSONObject returnMessage = budgetDao.deleteBudget(email, budgetName);
 				if(returnMessage.getString("status").equals("success")){
 					JSONObject info=budgetDao.getEverything(new User(email), 0);
