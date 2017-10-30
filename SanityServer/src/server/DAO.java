@@ -16,7 +16,7 @@ public class DAO {
 		Connection dbConnection = null;
 		if(testing != 1){
 			try {
-				return dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/SanityDB?user=root&password=developer&useSSL=false");
+				return dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/SanityDB?user=root&password=chenyang&useSSL=false");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
