@@ -35,7 +35,7 @@ public class DAO {
 		return dbConnection;
 	}
 	
-	protected Integer UserFindUserID(User user) throws SQLException{
+	public Integer UserFindUserID(User user) throws SQLException{
 		Integer toReturn=-1;
 		Connection conn=getDBConnection();
 		PreparedStatement st = conn.prepareStatement("SELECT * FROM SanityDB.User WHERE Email=?");
