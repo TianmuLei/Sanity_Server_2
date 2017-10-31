@@ -109,7 +109,7 @@ public class TransactionDAO extends DAO{
 		return returnMessage;
 	}
 	
-	private Boolean checkTransactionExist(Transaction toAdd) throws SQLException{
+	public Boolean checkTransactionExist(Transaction toAdd) throws SQLException{
 		Connection conn= getDBConnection();
 		TransactionFindUserID(toAdd);
 		TransactionFindBudgetID(toAdd);
