@@ -215,7 +215,7 @@ public class Server extends WebSocketServer {
 				String budgetName = JSONMessage.getJSONObject("information").getString("budgetName");
 				String oldName = JSONMessage.getJSONObject("information").getString("categoryOldName");
 				String newName = JSONMessage.getJSONObject("information").getString("categoryNewName");
-				Double newLimit = JSONMessage.getJSONObject("information").getDouble("categoryNewLimit");
+				Double newLimit = JSONMessage.getJSONObject("information").getDouble("limit");
 				JSONObject returnMessage = budgetDao.CateDao.editCategory(email, oldName, newName, budgetName, newLimit);
 				if(returnMessage.getString("status").equals("success")){
 					JSONObject info=budgetDao.getEverything(new User(email), 0);
