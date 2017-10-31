@@ -7,7 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Budget {
-	String email, budgetName,date;
+	public String email, budgetName,date;
 	Integer period;
 	Double budgetTotal;
 	ArrayList<Category> categories;

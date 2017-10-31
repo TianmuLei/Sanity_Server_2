@@ -47,6 +47,7 @@ public class DAOTest {
 	public void BudgetFindUserIDTest() {
 		try{
 			Budget toTest = new Budget("testing");
+			toTest.email="yang@usc.edu";
 			tests.BudgetFindUserID(toTest);
 			PreparedStatement statement = conn.prepareStatement("SELECT * FROM SanityDB.sanity_budget WHERE Budget_name='testing'");
 			ResultSet rs=statement.executeQuery();
