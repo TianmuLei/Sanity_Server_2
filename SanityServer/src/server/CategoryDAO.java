@@ -55,6 +55,7 @@ public class CategoryDAO extends DAO{
 			if(conn!=null){
 				conn.close();
 			}
+			returnMessage.put("function", "addCategory");
 			returnMessage.put("status", "success");
 		}catch (SQLException e) {
 			System.out.println(e.getMessage());

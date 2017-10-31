@@ -217,7 +217,7 @@ public class Server extends WebSocketServer {
 				String newName = JSONMessage.getJSONObject("information").getString("categoryNewName");
 				Double newLimit = JSONMessage.getJSONObject("information").getDouble("categoryNewLimit");
 				JSONObject returnMessage = budgetDao.CateDao.editCategory(email, oldName, newName, budgetName, newLimit);
-				if(returnMessage.getString("status").equals("sucess")){
+				if(returnMessage.getString("status").equals("success")){
 					JSONObject info=budgetDao.getEverything(new User(email), 0);
 					returnMessage.put("information", info.getJSONObject("information"));
 				}
@@ -229,7 +229,7 @@ public class Server extends WebSocketServer {
 				String categoryName = JSONMessage.getJSONObject("information").getString("categoryName");
 				Double limit = JSONMessage.getJSONObject("information").getDouble("limit");
 				JSONObject returnMessage=budgetDao.CateDao.addSingleCategory(email, budgetName,categoryName,limit);
-				if(returnMessage.getString("status").equals("sucess")){
+				if(returnMessage.getString("status").equals("success")){
 					JSONObject info=budgetDao.getEverything(new User(email), 0);
 					returnMessage.put("information", info.getJSONObject("information"));
 				}
