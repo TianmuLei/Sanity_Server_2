@@ -408,7 +408,8 @@ public class DAO {
 			for(int i=0;i<budgetList.length();++i){
 				JSONObject budgetJSON=budgetList.getJSONObject(i);
 				JSONArray categoryList=budgetJSON.getJSONArray("categoryList");
-				int tranSpent=0;
+				double tranSpent=0;
+				double budgetTotal =0;
 				for(int j=0;j<categoryList.length();j++){
 					JSONObject categoryJSON=(JSONObject) categoryList.get(j);
 					JSONArray TransList=categoryJSON.getJSONArray("transactionList");
@@ -419,10 +420,12 @@ public class DAO {
 					categoryJSON.remove("categorySpent");
 					categoryJSON.put("categorySpent",cateSpent);
 					tranSpent+=cateSpent;
+					budgetTotal += categoryJSON.getDouble("limit");
 				}
 				budgetJSON.remove("budgetSpent");
 				budgetJSON.put("budgetSpent", tranSpent);
-				
+				budgetJSON.remove("budgetTotal");
+				budgetJSON.put("budgetTotal", budgetTotal);	
 			}
 			JSONObject info = new JSONObject();
 			info.put("budgetLsit", budgetList);
