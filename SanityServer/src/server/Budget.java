@@ -11,7 +11,7 @@ public class Budget {
 	Integer period;
 	Double budgetTotal;
 	ArrayList<Category> categories;
-	Integer userId=-1;
+	public Integer userId=-1;
 	Integer budgetId=-1;
 	Integer frequency=-1;
 	Integer threshold = -1;

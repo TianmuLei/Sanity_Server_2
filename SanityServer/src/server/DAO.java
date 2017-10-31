@@ -57,7 +57,7 @@ public class DAO {
 		}		
 		return toReturn;
 	}
-	protected void BudgetFindUserID(Budget budget) throws SQLException{
+	public void BudgetFindUserID(Budget budget) throws SQLException{
 		Connection conn = getDBConnection();
 		PreparedStatement userStatement = conn.prepareStatement("SELECT * FROM SanityDB.User WHERE Email=?");
 		userStatement.setString(1, budget.email);

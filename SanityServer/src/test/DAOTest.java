@@ -11,6 +11,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import server.Budget;
 import server.DAO;
 import server.User;
 
@@ -40,7 +41,22 @@ public class DAOTest {
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
 		}
-		
 	}
-
+	
+	@Test
+	public void BudgetFindUserIDTest() {
+		try{
+			Budget toTest = new Budget("testing");
+			tests.BudgetFindUserID(toTest);
+			PreparedStatement statement = conn.prepareStatement("SELECT * FROM SanityDB.sanity_budget WHERE Budget_name='testing'");
+			ResultSet rs=statement.executeQuery();
+			Integer userIDtest =-1;
+			if(rs.next()){
+				userIDtest=rs.getInt("User_id");
+			}
+			assertEquals(userIDtest, toTest.userId);
+		}catch(SQLException e){
+			System.out.println(e.getMessage());
+		}
+	}
 }
