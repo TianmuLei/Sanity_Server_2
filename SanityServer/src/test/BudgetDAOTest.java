@@ -37,6 +37,8 @@ public class BudgetDAOTest {
 		try{
 			PreparedStatement st = conn.prepareStatement("DELETE FROM SanityDB.Category where Category_name='qqq'");
 			st.executeUpdate();
+			st = conn.prepareStatement("DELETE FROM SanityDB.Category where Category_name='testing'");
+			st.executeUpdate();
 			st = conn.prepareStatement("DELETE FROM SanityDB.Budget where Budget_name='qwer'");
 			st.executeUpdate();
 			
@@ -74,13 +76,13 @@ public class BudgetDAOTest {
 		ArrayList<Category> toadd = new ArrayList<Category>();
 		toadd.add(new Category("qqq", 100 ));
 		Budget Btoadd = new Budget("qwer","yang@usc.edu", DateCal.today(), 10, 1000, 3, 75,toadd );
-		Budget Btoadd2 = new Budget("testing","yang@usc.edu", DateCal.today(), 10, 800, 5, 75,toadd );
+		Budget Btoadd2 = new Budget("testing","yang@usc.edu", DateCal.today(), 10, 800, 3, 75,toadd );
 		
 		JSONObject getret =  test.editBudget(Btoadd2, Btoadd);
 		try{
 			PreparedStatement st = conn.prepareStatement("SELECT * FROM SanityDB.Budget WHERE Budget_name=? AND Frequency=?");
 			st.setString( 1, "testing");
-			st.setString( 2, "5");
+			st.setString( 2, "3");
 			ResultSet rs = st.executeQuery();
 			
 			assertEquals(true, rs.next());
