@@ -15,8 +15,15 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 
-public class EmailSender {
-	public void sendTest(String user){
+public class EmailSender extends Thread{
+	String user, toEmail;
+	public EmailSender(String user, String toEmail){
+		this.user=user;
+		this.toEmail=toEmail;
+	}
+	@Override
+	public void run() {
+		super.run();
 		final String username = "sanity.absolutea@gmail.com";
 		final String password = "sanityabsolutea";
 		Properties props = new Properties();
@@ -34,7 +41,7 @@ public class EmailSender {
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress("sanity.absolutea@gmail.com"));
 			message.setRecipients(Message.RecipientType.TO,
-				InternetAddress.parse("sanity.absolutea@gmail.com"));
+				InternetAddress.parse(toEmail));
 			message.setSubject("Welcome to $anity");
 			byte[] encoded = Files.readAllBytes(Paths.get("emailHTML.html"));
 			String emailToSend= new String(encoded,Charset.defaultCharset());
@@ -49,12 +56,8 @@ public class EmailSender {
 		}catch(IOException e){
 			System.out.println(e.getMessage());
 			System.out.println("problems in email sender");
-		}
-	  }
-	public static void main(String[] args){
-		 EmailSender e=new EmailSender();
-		 e.sendTest("mu");
-	 }
+		}	
+	}
 }
 
 
