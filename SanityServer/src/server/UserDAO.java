@@ -40,8 +40,6 @@ public class UserDAO extends DAO{
 				message.put("status", "success");
 				String username = getUsername(u.email);
 				message.put("username", username);
-				//JSONArray budgetList= getBudgetListDB(u);
-				//message.put("budgetList", budgetList);
 			}
 			else{
 				System.out.println("return false");
@@ -55,6 +53,26 @@ public class UserDAO extends DAO{
 			e.printStackTrace();
 		}	
 		return null;
+	}
+	public JSONObject autoLogin(String email){
+		JSONObject message= new JSONObject();
+		try{
+			message.put("function", "autoLogin");
+			if(checkUserExist(new User(email))){
+				message.put("status", "success");
+			}
+			else{
+				message.put("status", "fail");
+				message.put("detail", "user does not exist");
+			}
+		}catch(JSONException e){
+			System.out.println(e.getMessage());
+			System.out.println("JSON error in auto login");
+		}catch (SQLException e) {
+			System.out.println(e.getMessage());
+			System.out.println("SQL error in auto login");
+		}
+		return message;
 	}
 	
 	public boolean checkUserExist(User user) throws SQLException{
@@ -140,22 +158,17 @@ public class UserDAO extends DAO{
 		System.out.println("change Username");
 		Connection conn=getDBConnection();
 		JSONObject message = new JSONObject();
-				try {
-					message.put("function", "changeUsername");
-				} catch (JSONException e1) {
-					e1.printStackTrace();
-				}
+		try {
+			message.put("function", "changeUsername");
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
 		try{
-			 //if(verifyPassword(user.email, user.password1, user.password2)){
-			 	PreparedStatement upUser = conn.prepareStatement("UPDATE  SanityDB.User SET Username= ? WHERE Email = ?");
-				upUser.setString( 1, user.username);
-				upUser.setString( 2, user.email);
-				upUser.execute();
-				message.put("status", "success");
-			// }	
-			// else{
-			 //	message.put("status", "fail");
-			 //}	
+			PreparedStatement upUser = conn.prepareStatement("UPDATE  SanityDB.User SET Username= ? WHERE Email = ?");
+			upUser.setString( 1, user.username);
+			upUser.setString( 2, user.email);
+			upUser.execute();
+			message.put("status", "success");	
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
 		} catch (JSONException e) {
@@ -163,8 +176,7 @@ public class UserDAO extends DAO{
 		}finally{
 			if (conn != null) {
 				conn.close();
-			}
-			
+			}	
 		}
 		return message;		
 	}

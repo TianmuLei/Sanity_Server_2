@@ -89,11 +89,8 @@ public class Server extends WebSocketServer {
 				JSONObject returnMessage=userDao.Login(user);
 				if(returnMessage.getString("status").equals("success")){
 					JSONObject info=budgetDao.getEverything(user, 0);
-					System.out.println("FINISH FETCHING");
 					returnMessage.put("information", info.getJSONObject("information"));
 				}
-				
-				
 				sendMessagetoClient(conn,returnMessage);
 			}
 			else if(message1.equals("createBudget")){
@@ -234,6 +231,12 @@ public class Server extends WebSocketServer {
 			}
 			else if (message1.equals("autoLogin")){
 				String email = JSONMessage.getJSONObject("information").getString("email");
+				JSONObject returnMessage = userDao.autoLogin(email);
+				if(returnMessage.getString("status").equals("success")){
+					JSONObject info=budgetDao.getEverything(new User(email), 0);
+					returnMessage.put("information", info.getJSONObject("information"));
+				}
+				sendMessagetoClient(conn,returnMessage);
 			}
 		}catch(JSONException e){
 			
