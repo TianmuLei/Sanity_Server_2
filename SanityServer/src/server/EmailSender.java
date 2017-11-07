@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -45,9 +43,16 @@ public class EmailSender extends Thread{
 			message.setRecipients(Message.RecipientType.TO,
 				InternetAddress.parse(toEmail));
 			message.setSubject("Welcome to $anity");
-//			byte[] encoded = Files.readAllBytes(Paths.get());
+//			byte[] encoded = Files.readAllBytes(Paths.get("/emailHTML.html"));
 //			String emailToSend= new String(encoded,Charset.defaultCharset());
-			String emailToSend = readFromJARFile();
+			InputStream in = getClass().getResourceAsStream("/emailHTML.html");
+			BufferedReader input = new BufferedReader(new InputStreamReader(in));
+			String emailToSend= new String();
+			String temp = input.readLine();
+			while(temp!=null){
+				emailToSend+=temp;
+				temp =input.readLine();
+			}
 			emailToSend=emailToSend.replace("$$$$$$",user);
 			message.setContent(
 					emailToSend,
@@ -61,23 +66,10 @@ public class EmailSender extends Thread{
 			System.out.println("problems in email sender");
 		}	
 	}
-	private String readFromJARFile()
-			throws IOException
-			{
-			  InputStream is = getClass().getResourceAsStream("src/html/emailHTML.html");
-			  InputStreamReader isr = new InputStreamReader(is);
-			  BufferedReader br = new BufferedReader(isr);
-			  StringBuffer sb = new StringBuffer();
-			  String line;
-			  while ((line = br.readLine()) != null) 
-			  {
-			    sb.append(line);
-			  }
-			  br.close();
-			  isr.close();
-			  is.close();
-			  return sb.toString();
-			}
+//	public static void main(String[] args){
+//		EmailSender sender = new EmailSender("mu", "tianmu.lei2@gmail.com");
+//		sender.start();
+//	}
 }
 
 
