@@ -83,6 +83,11 @@ public class Server extends WebSocketServer {
 				User user=new User(JSONMessage.getJSONObject("information"));
 				JSONObject returnMessage=userDao.Register(user);	
 				sendMessagetoClient(conn,returnMessage);
+				if(returnMessage.getString("status").equals("success")){
+					System.out.println("send Email");
+					EmailSender sendEmail= new EmailSender(user.username, user.email);
+					sendEmail.start();
+				}
 			}
 			else if(message1.equals("login")){	
 				User user = new User(JSONMessage.getJSONObject("information"));
