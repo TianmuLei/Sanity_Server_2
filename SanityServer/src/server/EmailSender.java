@@ -16,7 +16,7 @@ import javax.mail.internet.MimeMessage;
 
 
 public class EmailSender {
-	public void sendTest(){
+	public void sendTest(String user){
 		final String username = "sanity.absolutea@gmail.com";
 		final String password = "sanityabsolutea";
 		Properties props = new Properties();
@@ -35,11 +35,12 @@ public class EmailSender {
 			message.setFrom(new InternetAddress("sanity.absolutea@gmail.com"));
 			message.setRecipients(Message.RecipientType.TO,
 				InternetAddress.parse("sanity.absolutea@gmail.com"));
-			message.setSubject("Welcome");
+			message.setSubject("Welcome to $anity");
 			byte[] encoded = Files.readAllBytes(Paths.get("emailHTML.html"));
 			String emailToSend= new String(encoded,Charset.defaultCharset());
+			emailToSend=emailToSend.replace("$$$$$$",user);
 			message.setContent(
-		              "<h1>This is actual message embedded in HTML tags</h1>",
+					emailToSend,
 		             "text/html");
 			Transport.send(message);
 			System.out.println("Done");
@@ -50,6 +51,10 @@ public class EmailSender {
 			System.out.println("problems in email sender");
 		}
 	  }
+	public static void main(String[] args){
+		 EmailSender e=new EmailSender();
+		 e.sendTest("mu");
+	 }
 }
 
 
