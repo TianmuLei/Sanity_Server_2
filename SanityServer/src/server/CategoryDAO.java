@@ -146,7 +146,7 @@ public class CategoryDAO extends DAO{
 					+ "AND Email=? AND Budget_name=?");
 			getCategory.setString(1, oldName);
 			getCategory.setString(2, email);
-			getCategory.setString(3, oldName);
+			getCategory.setString(3, budgetName);
 			ResultSet resultSet=getCategory.executeQuery();
 			
 			Integer categoryID =-1;
