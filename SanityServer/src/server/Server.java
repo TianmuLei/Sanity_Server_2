@@ -33,8 +33,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sound.midi.MidiDevice.Info;
-
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
@@ -42,7 +40,6 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.jdbc.object.UpdatableSqlQuery;
 
 
 public class Server extends WebSocketServer {
@@ -234,6 +231,9 @@ public class Server extends WebSocketServer {
 					returnMessage.put("information", info.getJSONObject("information"));
 				}
 				sendMessagetoClient(conn, returnMessage);
+			}
+			else if (message1.equals("autoLogin")){
+				String email = JSONMessage.getJSONObject("information").getString("email");
 			}
 		}catch(JSONException e){
 			

@@ -127,13 +127,13 @@ public class CategoryDAO extends DAO{
 			checkCategory.setString(2, email);
 			checkCategory.setString(3, budgetName);
 			ResultSet check = checkCategory.executeQuery();
-			if(check.wasNull()){
+			if(!check.next()){
+				System.out.println("there is nothing to edit");
 				return false;
 			}
 			if(check!=null){
 				check.close();
 			}
-			System.out.println(1);
 			if(checkCategory!=null){
 				checkCategory.close();
 			}
@@ -142,13 +142,12 @@ public class CategoryDAO extends DAO{
 			getCategory.setString(1, oldName);
 			getCategory.setString(2, email);
 			getCategory.setString(3, oldName);
-			System.out.println(2);
 			ResultSet resultSet=getCategory.executeQuery();
 			
-			System.out.println(2);
 			Integer categoryID =-1;
 			if(resultSet.next()){
 				categoryID=resultSet.getInt("Category_id");
+				System.out.println("Category_ id is "+categoryID);
 			}
 			PreparedStatement updateCategory = conn.prepareStatement("UPDATE SanityDB.Category SET Category_name=?"
 					+ ",Category_total=? WHERE Category_id=?");
@@ -156,7 +155,6 @@ public class CategoryDAO extends DAO{
 			updateCategory.setDouble(2, newLimit);
 			updateCategory.setInt(3, categoryID);
 			updateCategory.executeUpdate();
-			System.out.println(3);
 			if(updateCategory!=null){
 				updateCategory.close();
 			}
