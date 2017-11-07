@@ -60,6 +60,8 @@ public class UserDAO extends DAO{
 			message.put("function", "autoLogin");
 			if(checkUserExist(new User(email))){
 				message.put("status", "success");
+				String username = getUsername(email);
+				message.put("username", username);
 			}
 			else{
 				message.put("status", "fail");
