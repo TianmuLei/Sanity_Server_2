@@ -64,7 +64,7 @@ public class EmailSender extends Thread{
 	private String readFromJARFile()
 			throws IOException
 			{
-			  InputStream is = getClass().getResourceAsStream("emailHTML.html");
+			  InputStream is = getClass().getResourceAsStream("src/emailHTML.html");
 			  InputStreamReader isr = new InputStreamReader(is);
 			  BufferedReader br = new BufferedReader(isr);
 			  StringBuffer sb = new StringBuffer();
