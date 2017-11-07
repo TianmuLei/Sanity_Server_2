@@ -33,7 +33,7 @@ public class BudgetDAOTest {
 	public void testCreateBudget() {
 		ArrayList<Category> toadd = new ArrayList<Category>();
 		toadd.add(new Category("qqq", 100 ));
-		Budget Btoadd = new Budget("qwer","yang@usc.edu", DateCal.today(), 10, 1000, 3, 75,toadd );
+		Budget Btoadd = new Budget("qwer","yang@usc.edu", DateCal.today(), 10, 1000, 5, 75,toadd );
 		try{
 			PreparedStatement st = conn.prepareStatement("DELETE FROM SanityDB.Category where Category_name='qqq'");
 			st.executeUpdate();
@@ -51,7 +51,7 @@ public class BudgetDAOTest {
 			PreparedStatement st = conn.prepareStatement("SELECT * FROM SanityDB.Budget WHERE Budget_name=? AND Budget_total=? AND Frequency=?");
 			st.setString( 1, "qwer");
 			st.setString( 2, "1000");
-			st.setString( 3, "3");
+			st.setString( 3, "5");
 			ResultSet rs = st.executeQuery();
 			
 			assertEquals(true, rs.next());
