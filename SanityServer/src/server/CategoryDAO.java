@@ -99,20 +99,14 @@ public class CategoryDAO extends DAO{
 	public JSONObject editCategory(String email, String oldName, String newName, String budgetName,
 			Double newLimit){
 		JSONObject returnMessage = new JSONObject();
-		System.out.println("entering edit Category function with");
-		System.out.println("old Name "+oldName);
-		System.out.println("newName "+ newName);
-		System.out.println("new Limit" + newLimit);
 		try{
 			returnMessage.put("function", "editCategory");
 			if(editCategoryDB(email,oldName,newName,budgetName,newLimit)){
 				returnMessage.put("status", "success");
-				System.out.println("edit sucess");
 			}
 			else{
 				returnMessage.put("status", "fail");
 				returnMessage.put("detail", "duplicated category name");
-				System.out.println("fail");
 			}
 			
 		}catch(JSONException e){
@@ -123,7 +117,6 @@ public class CategoryDAO extends DAO{
 	}
 	private Boolean editCategoryDB(String email, String oldName, String newName, String budgetName,
 			Double newLimit){
-		System.out.println("Entering editCategoryDB");
 		Connection conn =getDBConnection();
 		try{
 			PreparedStatement checkCategory = conn.prepareStatement("SELECT * FROM SanityDB.Sanity_category WHERE Category_name=? "
@@ -133,7 +126,6 @@ public class CategoryDAO extends DAO{
 			checkCategory.setString(3, budgetName);
 			ResultSet check = checkCategory.executeQuery();
 			if(!check.next()){
-				System.out.println("there is nothing to edit");
 				return false;
 			}
 			if(check!=null){
@@ -152,7 +144,6 @@ public class CategoryDAO extends DAO{
 			Integer categoryID =-1;
 			if(resultSet.next()){
 				categoryID=resultSet.getInt("Category_id");
-				System.out.println("Category_ id is "+categoryID);
 			}
 			PreparedStatement updateCategory = conn.prepareStatement("UPDATE SanityDB.Category SET Category_name=?"
 					+ ",Category_total=? WHERE Category_id=?");
@@ -170,7 +161,6 @@ public class CategoryDAO extends DAO{
 			System.out.println("SQL Error in editCategoryDB");
 			System.out.println(e.getMessage());
 		}
-		System.out.println("finish editCategoryDB");
 		return true;	
 	}
 	private void insertCategory(Budget budget) throws SQLException{
