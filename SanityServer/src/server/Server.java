@@ -85,7 +85,7 @@ public class Server extends WebSocketServer {
 				sendMessagetoClient(conn,returnMessage);
 				if(returnMessage.getString("status").equals("success")){
 					System.out.println("send Email");
-					EmailSender sendEmail= new EmailSender(user.username, user.email);
+					RegisterEmailSender sendEmail= new RegisterEmailSender(user.username, user.email);
 					sendEmail.start();
 				}
 			}

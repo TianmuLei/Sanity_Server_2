@@ -22,9 +22,9 @@ import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 
-public class EmailSender extends Thread{
+public class RegisterEmailSender extends Thread{
 	String user, toEmail;
-	public EmailSender(String user, String toEmail){
+	public RegisterEmailSender(String user, String toEmail){
 		this.user=user;
 		this.toEmail=toEmail;
 	}
@@ -116,7 +116,7 @@ public class EmailSender extends Thread{
 		}*/	
 	}
 	public static void main(String[] args){
-		EmailSender sender = new EmailSender("mu", "tianmu.lei2@gmail.com");
+		RegisterEmailSender sender = new RegisterEmailSender("mu", "tianmu.lei2@gmail.com");
 		sender.start();
 	}
 	
