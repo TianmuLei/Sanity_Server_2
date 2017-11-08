@@ -15,5 +15,7 @@
 	<classpathentry kind="lib" path="junit-4.10.jar"/>
 	<classpathentry kind="lib" path="src/test/jsch-0.1.54.jar"/>
 	<classpathentry kind="lib" path="javax.mail-1.3.3.01.jar"/>
+	<classpathentry kind="lib" path="com.sun.jersey.jersey-core-1.4.0.jar"/>
+	<classpathentry kind="lib" path="jersey-client.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

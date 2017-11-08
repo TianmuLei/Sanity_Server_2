@@ -13,6 +13,13 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.ws.rs.core.MediaType;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 
 public class EmailSender extends Thread{
@@ -24,7 +31,46 @@ public class EmailSender extends Thread{
 	@Override
 	public void run() {
 		super.run();
-		final String username = "sanity.absolutea@gmail.com";
+		 Client client = Client.create();
+		    client.addFilter(new HTTPBasicAuthFilter("api", "key-59d73d0d606d0df987743b0c84305aaf"));
+		    
+		    WebResource webResource = client.resource("https://api.mailgun.net/v3/sandbox1a3192acb7454b4cbe565ad1ee6369e4.mailgun.org/messages");
+		    MultivaluedMapImpl formData = new MultivaluedMapImpl();
+		    formData.add("from", "Mailgun Sandbox <postmaster@sandbox1a3192acb7454b4cbe565ad1ee6369e4.mailgun.org>");
+		   // formData.add("to", "Jiaxinch <jiaxinch@usc.edu>");
+		   String to=user+" <"+toEmail+">";
+		   System.out.println(to);
+		   formData.add("to", to);
+		    formData.add("subject", "Welcome to Sanity");
+		    try{
+		    	InputStream in = getClass().getResourceAsStream("/emailHTML.html");
+				BufferedReader input = new BufferedReader(new InputStreamReader(in));
+				String emailToSend= new String();
+				String temp = input.readLine();
+				while(temp!=null){
+					emailToSend+=temp;
+					temp =input.readLine();
+				}
+				emailToSend=emailToSend.replace("$$$$$$",user);
+				 formData.add("html",emailToSend);
+		    }catch (IOException e) {
+		    	System.out.println(e.getMessage());
+				System.out.println("problems in email sender");
+			}
+		    
+		    
+		    
+		   
+		    ClientResponse clientResponse=webResource.type(MediaType.APPLICATION_FORM_URLENCODED).
+		                                        post(ClientResponse.class, formData);
+		    System.out.println(clientResponse.getClientResponseStatus());
+		   // System.out.println( clientResponse.getResponseStatus());
+		   
+		     System.out.println("Done");
+		     return;
+		
+		
+	/*	final String username = "sanity.absolutea@gmail.com";
 		final String password = "sanityabsolutea";
 		Properties props = new Properties();
 		props.put("mail.smtp.auth", "true");
@@ -67,12 +113,14 @@ public class EmailSender extends Thread{
 		}catch(IOException e){
 			System.out.println(e.getMessage());
 			System.out.println("problems in email sender");
-		}	
+		}*/	
 	}
-//	public static void main(String[] args){
-//		EmailSender sender = new EmailSender("mu", "tianmu.lei2@gmail.com");
-//		sender.start();
-//	}
+	public static void main(String[] args){
+		EmailSender sender = new EmailSender("mu", "tianmu.lei2@gmail.com");
+		sender.start();
+	}
+	
+	
 }
 
 
