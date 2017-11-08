@@ -57,10 +57,6 @@ public class RegisterEmailSender extends Thread{
 		    	System.out.println(e.getMessage());
 				System.out.println("problems in email sender");
 			}
-		    
-		    
-		    
-		   
 		    ClientResponse clientResponse=webResource.type(MediaType.APPLICATION_FORM_URLENCODED).
 		                                        post(ClientResponse.class, formData);
 		    System.out.println(clientResponse.getClientResponseStatus());
