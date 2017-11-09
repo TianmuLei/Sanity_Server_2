@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 
 import javax.ws.rs.core.MediaType;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,8 +21,15 @@ public class BudgetEmailSender extends Thread{
 	JSONObject budget;
 	String toEmail;
 	String user;
-	private final String createCategoryStatement="";
-	private final String createTransactionStatement ="";
+	private final String createCategoryStatement= "<tr> <td ><strong>Category Name</strong></td> <td><strong>Spending</strong></td> <td><strong>Limit</strong></td> "
+			+ "<td><strong>End Date</strong></td> <td><strong>Number of Transaction</strong></td> </tr> "
+			+ "<tr> <td>$$$$$$CategoryName</td> <td>$$$$$$Spending</td> <td>$$$$$$Limit</td> "
+			+ "<td>$$$$$$Due Date</td> <td>$$$$$$Transaction Number</td> </tr>";
+	private final String createTransactionStatement =" <tr> <td>$$$$$$Transaction1Name</td> <td>$$$$$$Description</td> "
+			+ "<td>$$$$$$Amount</td> <td>$$$$$$Date</td> <td>$$$$$$Category_name</td> </tr>";
+	private final String createTransactionStatementHeader ="<tr> <td> <strong>Transaction Number</strong></td> <td><strong>Description</strong></td> <td><strong>Amount</strong></td> "
+			+ "<td><strong>Date</strong></td> <td><strong>Category name</strong></td> </tr>";
+	private final String footer ="</div> </div> </body> </html>";
 	public BudgetEmailSender(JSONObject budget, String email,String username){
 		this.budget=budget;
 		toEmail=email;
@@ -57,6 +65,34 @@ public class BudgetEmailSender extends Thread{
 			emailToSend = emailToSend.replace("$$$$$$startdate", budget.getString("startDate"));
 			emailToSend = emailToSend.replace("$$$$$$endDate", budget.getString("endDate"));
 			
+			JSONArray categoryList = budget.getJSONArray("categoryList");
+			for(int i=0;i<categoryList.length();++i){
+				emailToSend+="<table>";
+				emailToSend+=createCategoryStatement;
+				JSONObject category =(JSONObject)categoryList.get(i);
+				emailToSend =emailToSend.replace("$$$$$$CategoryName", category.getString("name"));
+				emailToSend =emailToSend.replace("$$$$$$Spending", category.getDouble("categorySpent")+"");
+				emailToSend =emailToSend.replace("$$$$$$Limit", category.getDouble("limit")+"");
+				emailToSend =emailToSend.replace("$$$$$$Due Date", budget.getString("endDate"));
+				JSONArray transList=category.getJSONArray("transactionList");
+				emailToSend =emailToSend.replace("$$$$$$Transaction Number", transList.length()+"");
+				emailToSend+=createTransactionStatementHeader;
+				for(int j=0;j<transList.length();++j){
+					JSONObject trans =(JSONObject)transList.get(i);
+					emailToSend+=createTransactionStatement;
+					emailToSend =emailToSend.replace("$$$$$$Transaction1Name", (i+1)+"");
+					emailToSend =emailToSend.replace("$$$$$$Description", trans.getString("description"));
+					emailToSend =emailToSend.replace("$$$$$$Amount", trans.getDouble("amount")+"");
+					emailToSend =emailToSend.replace("$$$$$$Date", trans.getString("date"));
+					emailToSend =emailToSend.replace("$$$$$$Category_name", category.getString("name"));
+				}
+				
+				emailToSend+="</table>";
+				emailToSend+="<br/>";
+				
+			}
+			
+			emailToSend+=footer;
 			formData.add("html",emailToSend);
 			ClientResponse clientResponse=webResource.type(MediaType.APPLICATION_FORM_URLENCODED).
 			                                        post(ClientResponse.class, formData);
