@@ -78,9 +78,9 @@ public class BudgetEmailSender extends Thread{
 				emailToSend =emailToSend.replace("$$$$$$Transaction Number", transList.length()+"");
 				emailToSend+=createTransactionStatementHeader;
 				for(int j=0;j<transList.length();++j){
-					JSONObject trans =(JSONObject)transList.get(i);
+					JSONObject trans =(JSONObject)transList.get(j);
 					emailToSend+=createTransactionStatement;
-					emailToSend =emailToSend.replace("$$$$$$Transaction1Name", (i+1)+"");
+					emailToSend =emailToSend.replace("$$$$$$Transaction1Name", (j+1)+"");
 					emailToSend =emailToSend.replace("$$$$$$Description", trans.getString("description"));
 					emailToSend =emailToSend.replace("$$$$$$Amount", trans.getDouble("amount")+"");
 					emailToSend =emailToSend.replace("$$$$$$Date", trans.getString("date"));
