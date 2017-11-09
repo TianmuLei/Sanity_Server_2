@@ -31,7 +31,7 @@ public class BudgetEmailSender extends Thread{
 	public void run(){
 		try{
 			Client client = Client.create();
-			client.addFilter(new HTTPBasicAuthFilter("api", "my-key"));
+			client.addFilter(new HTTPBasicAuthFilter("api", "key-59d73d0d606d0df987743b0c84305aaf"));
 			    
 			WebResource webResource = client.resource("https://api.mailgun.net/v3/sandbox1a3192acb7454b4cbe565ad1ee6369e4.mailgun.org/messages");
 			MultivaluedMapImpl formData = new MultivaluedMapImpl();
@@ -67,5 +67,9 @@ public class BudgetEmailSender extends Thread{
 		}
 		
 		
+	}
+	public static void main(String[] args){
+		BudgetDAO temp = new BudgetDAO();
+		temp.sendBudgetSummary("test", "tianmu.lei2@gmail.com");
 	}
 }
