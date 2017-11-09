@@ -33,6 +33,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sound.midi.MidiDevice.Info;
+
 import org.java_websocket.WebSocket;
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.framing.Framedata;
@@ -242,6 +244,12 @@ public class Server extends WebSocketServer {
 					returnMessage.put("information", info.getJSONObject("information"));
 				}
 				sendMessagetoClient(conn,returnMessage);
+			}
+			else if(message1.equals("requestSummary")){
+				String email = JSONMessage.getJSONObject("information").getString("email");
+				String budgetName = JSONMessage.getJSONObject("information").getString("budgetName");
+				JSONObject returnMessage = budgetDao.sendBudgetSummary(budgetName, email);
+				sendMessagetoClient(conn, returnMessage);
 			}
 		}catch(JSONException e){
 			
