@@ -23,6 +23,7 @@ public class BudgetDAO extends DAO{
 		try{
 			returnMessage.put("function", "requestSummary");
 			JSONObject messageNeeded = fetchAllData(email, 0);
+			messageNeeded = messageNeeded.getJSONObject("information");
 			JSONArray array = messageNeeded.getJSONArray("budgetLsit");
 			for(int i=0;i<array.length();++i){
 				JSONObject temp = (JSONObject)array.get(i);

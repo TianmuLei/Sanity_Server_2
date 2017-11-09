@@ -50,12 +50,12 @@ public class BudgetEmailSender extends Thread{
 				emailToSend+=temp;
 				temp =input.readLine();
 			}
-			emailToSend=emailToSend.replace("$$$$$$",user);
+			emailToSend =emailToSend.replace("$$$$$$budget", budget.getString("name"));
+			emailToSend=emailToSend.replace("$$$$$$user",user);
 			formData.add("html",emailToSend);
 			ClientResponse clientResponse=webResource.type(MediaType.APPLICATION_FORM_URLENCODED).
 			                                        post(ClientResponse.class, formData);
 			System.out.println(clientResponse.getClientResponseStatus());
-			   // System.out.println( clientResponse.getResponseStatus());
 			System.out.println("Done");
 			
 		}catch(JSONException e){
@@ -70,6 +70,7 @@ public class BudgetEmailSender extends Thread{
 	}
 	public static void main(String[] args){
 		BudgetDAO temp = new BudgetDAO();
-		temp.sendBudgetSummary("test", "tianmu.lei2@gmail.com");
+		DAO.testing=0;
+		temp.sendBudgetSummary("yearly", "tianmu.lei2@gmail.com");
 	}
 }
