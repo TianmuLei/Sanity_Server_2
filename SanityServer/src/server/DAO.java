@@ -335,6 +335,9 @@ public class DAO {
 				String endDate = DateCal.getEndDate(startDate, temp.getInt("period"));
 				long remain =DateCal.getRemian(endDate);
 				temp.put("remain", remain);
+				temp.put("startDate", startDate);
+				temp.put("endDate", endDate);
+				
 				budgetList.put(temp);
 			}
 			if(rs!=null){

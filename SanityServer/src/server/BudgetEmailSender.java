@@ -52,6 +52,11 @@ public class BudgetEmailSender extends Thread{
 			}
 			emailToSend =emailToSend.replace("$$$$$$budget", budget.getString("name"));
 			emailToSend=emailToSend.replace("$$$$$$user",user);
+			emailToSend=emailToSend.replace("$$$$$$currentSpending", budget.getDouble("budgetSpent")+"");
+			emailToSend= emailToSend.replace("$$$$$$TotalBudget", budget.getDouble("budgetTotal")+"");
+			emailToSend = emailToSend.replace("$$$$$$startdate", budget.getString("startDate"));
+			emailToSend = emailToSend.replace("$$$$$$endDate", budget.getString("endDate"));
+			
 			formData.add("html",emailToSend);
 			ClientResponse clientResponse=webResource.type(MediaType.APPLICATION_FORM_URLENCODED).
 			                                        post(ClientResponse.class, formData);
