@@ -18,6 +18,8 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 public class BudgetEmailSender extends Thread{
 	JSONObject budget;
+	private final String createCategoryStatement="";
+	private final String createTransactionStatement ="";
 	public BudgetEmailSender(JSONObject budget){
 		this.budget=budget;
 	}
@@ -27,23 +29,18 @@ public class BudgetEmailSender extends Thread{
 		try{
 			user= budget.getString("user");
 			toEmail = budget.getString("email");
-		}catch(JSONException e){
-			System.out.println(e.getMessage());
-			System.out.println("JSON error in BudgetEmail sender");
-		}
-		
-		Client client = Client.create();
-		client.addFilter(new HTTPBasicAuthFilter("api", "my-key"));
-		    
-		WebResource webResource = client.resource("https://api.mailgun.net/v3/sandbox1a3192acb7454b4cbe565ad1ee6369e4.mailgun.org/messages");
-		MultivaluedMapImpl formData = new MultivaluedMapImpl();
-		formData.add("from", "Mailgun Sandbox <postmaster@sandbox1a3192acb7454b4cbe565ad1ee6369e4.mailgun.org>");
-		// formData.add("to", "Jiaxinch <jiaxinch@usc.edu>");
-		String to=user+" <"+toEmail+">";
-		System.out.println(to);
-		formData.add("to", to);
-		formData.add("subject", "Welcome to Sanity");
-		try{
+			Client client = Client.create();
+			client.addFilter(new HTTPBasicAuthFilter("api", "my-key"));
+			    
+			WebResource webResource = client.resource("https://api.mailgun.net/v3/sandbox1a3192acb7454b4cbe565ad1ee6369e4.mailgun.org/messages");
+			MultivaluedMapImpl formData = new MultivaluedMapImpl();
+			formData.add("from", "Mailgun Sandbox <postmaster@sandbox1a3192acb7454b4cbe565ad1ee6369e4.mailgun.org>");
+			// formData.add("to", "Jiaxinch <jiaxinch@usc.edu>");
+			String to=user+" <"+toEmail+">";
+			System.out.println(to);
+			formData.add("to", to);
+			String title ="Budget "+budget.getString("name")+" Summary";
+			formData.add("subject", title);
 			InputStream in = getClass().getResourceAsStream("/emailHTML.html");
 			BufferedReader input = new BufferedReader(new InputStreamReader(in));
 			String emailToSend= new String();
@@ -54,14 +51,20 @@ public class BudgetEmailSender extends Thread{
 			}
 			emailToSend=emailToSend.replace("$$$$$$",user);
 			formData.add("html",emailToSend);
+			ClientResponse clientResponse=webResource.type(MediaType.APPLICATION_FORM_URLENCODED).
+			                                        post(ClientResponse.class, formData);
+			System.out.println(clientResponse.getClientResponseStatus());
+			   // System.out.println( clientResponse.getResponseStatus());
+			System.out.println("Done");
+			
+		}catch(JSONException e){
+			System.out.println(e.getMessage());
+			System.out.println("JSON error in BudgetEmail sender");
 		}catch (IOException e) {
 			System.out.println(e.getMessage());
 			System.out.println("problems in email sender");
 		}
-		ClientResponse clientResponse=webResource.type(MediaType.APPLICATION_FORM_URLENCODED).
-		                                        post(ClientResponse.class, formData);
-		System.out.println(clientResponse.getClientResponseStatus());
-		   // System.out.println( clientResponse.getResponseStatus());
-		System.out.println("Done");
+		
+		
 	}
 }
