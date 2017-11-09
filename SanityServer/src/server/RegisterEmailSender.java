@@ -31,43 +31,37 @@ public class RegisterEmailSender extends Thread{
 	@Override
 	public void run() {
 		super.run();
-		 Client client = Client.create();
-		    client.addFilter(new HTTPBasicAuthFilter("api", "my-key"));
+		Client client = Client.create();
+		client.addFilter(new HTTPBasicAuthFilter("api", "my-key"));
 		    
-		    WebResource webResource = client.resource("https://api.mailgun.net/v3/sandbox1a3192acb7454b4cbe565ad1ee6369e4.mailgun.org/messages");
-		    MultivaluedMapImpl formData = new MultivaluedMapImpl();
-		    formData.add("from", "Mailgun Sandbox <postmaster@sandbox1a3192acb7454b4cbe565ad1ee6369e4.mailgun.org>");
-		   // formData.add("to", "Jiaxinch <jiaxinch@usc.edu>");
-		   String to=user+" <"+toEmail+">";
-		   System.out.println(to);
-		   formData.add("to", to);
-		    formData.add("subject", "Welcome to Sanity");
-		    try{
-		    	InputStream in = getClass().getResourceAsStream("/emailHTML.html");
-				BufferedReader input = new BufferedReader(new InputStreamReader(in));
-				String emailToSend= new String();
-				String temp = input.readLine();
-				while(temp!=null){
-					emailToSend+=temp;
-					temp =input.readLine();
-				}
-				emailToSend=emailToSend.replace("$$$$$$",user);
-				 formData.add("html",emailToSend);
-		    }catch (IOException e) {
-		    	System.out.println(e.getMessage());
-				System.out.println("problems in email sender");
+		WebResource webResource = client.resource("https://api.mailgun.net/v3/sandbox1a3192acb7454b4cbe565ad1ee6369e4.mailgun.org/messages");
+		MultivaluedMapImpl formData = new MultivaluedMapImpl();
+		formData.add("from", "Mailgun Sandbox <postmaster@sandbox1a3192acb7454b4cbe565ad1ee6369e4.mailgun.org>");
+		// formData.add("to", "Jiaxinch <jiaxinch@usc.edu>");
+		String to=user+" <"+toEmail+">";
+		System.out.println(to);
+		formData.add("to", to);
+		formData.add("subject", "Welcome to Sanity");
+		try{
+			InputStream in = getClass().getResourceAsStream("/emailHTML.html");
+			BufferedReader input = new BufferedReader(new InputStreamReader(in));
+			String emailToSend= new String();
+			String temp = input.readLine();
+			while(temp!=null){
+				emailToSend+=temp;
+				temp =input.readLine();
 			}
-		    
-		    
-		    
-		   
-		    ClientResponse clientResponse=webResource.type(MediaType.APPLICATION_FORM_URLENCODED).
+			emailToSend=emailToSend.replace("$$$$$$",user);
+			formData.add("html",emailToSend);
+		}catch (IOException e) {
+			System.out.println(e.getMessage());
+			System.out.println("problems in email sender");
+		}
+		ClientResponse clientResponse=webResource.type(MediaType.APPLICATION_FORM_URLENCODED).
 		                                        post(ClientResponse.class, formData);
-		    System.out.println(clientResponse.getClientResponseStatus());
+		System.out.println(clientResponse.getClientResponseStatus());
 		   // System.out.println( clientResponse.getResponseStatus());
-		   
-		     System.out.println("Done");
-		     return;
+		System.out.println("Done");
 		
 		
 	/*	final String username = "sanity.absolutea@gmail.com";
