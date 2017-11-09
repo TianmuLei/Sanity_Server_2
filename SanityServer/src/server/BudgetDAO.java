@@ -17,7 +17,30 @@ public class BudgetDAO extends DAO{
 	public JSONObject getEverything(User user,Integer period){
 		return fetchAllData(user.email,period);
 	}
-
+	
+	public JSONObject sendBudgetSummary(String budgetName, String email){
+		JSONObject returnMessage = new JSONObject();
+		try{
+			returnMessage.put("function", "requestSummary");
+			JSONObject messageNeeded = fetchAllData(email, 0);
+			JSONArray array = messageNeeded.getJSONArray("budgetLsit");
+			for(int i=0;i<array.length();++i){
+				JSONObject temp = (JSONObject)array.get(i);
+				if(temp.getString("name").equals(budgetName)){
+					messageNeeded=temp;
+				}
+			}
+			String userName = getUsername(email);
+			BudgetEmailSender sender = new BudgetEmailSender(messageNeeded,email,userName);
+			sender.start();
+			returnMessage.put("status", "success");
+		}catch (JSONException e) {
+			System.out.println(e.getMessage());
+			System.out.println("JSON error in sendBudgetSummary");
+		}
+		return returnMessage;
+	}
+	
 	public JSONObject getBudgetList(User user) {
 		JSONObject returnMessage = new JSONObject();
 		try{
@@ -212,17 +235,11 @@ public class BudgetDAO extends DAO{
 			if(findUserID!=null){
 				findUserID.close();
 			}
-//			BudgetFindUserID(toEdit);
-//			original.userId=toEdit.userId;
-//			BudgetFindBudgetID(original);
-//			toEdit.budgetId=original.budgetId;
-//			toEdit.userId=toEdit.userId;
 			PreparedStatement updateStatement = conn.prepareStatement("UPDATE SanityDB.Budget SET Budget_name=?"
 					+ ",Budget_period=?,"
 					+ "Frequency=?,Threshold=? WHERE Budget_id=? AND User_id=?");
 			updateStatement.setString(1, toEdit.budgetName);
 			updateStatement.setInt(2, toEdit.period);
-			//updateStatement.setDate(3, java.sql.Date.valueOf(toEdit.date));
 			updateStatement.setInt(3, toEdit.frequency);
 			updateStatement.setInt(4, toEdit.threshold);
 			updateStatement.setInt(5, budgetID);

@@ -18,17 +18,18 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 public class BudgetEmailSender extends Thread{
 	JSONObject budget;
+	String toEmail;
+	String user;
 	private final String createCategoryStatement="";
 	private final String createTransactionStatement ="";
-	public BudgetEmailSender(JSONObject budget){
+	public BudgetEmailSender(JSONObject budget, String email,String username){
 		this.budget=budget;
+		toEmail=email;
+		user=username;
 	}
 	@Override
 	public void run(){
-		String user="",toEmail="";
 		try{
-			user= budget.getString("user");
-			toEmail = budget.getString("email");
 			Client client = Client.create();
 			client.addFilter(new HTTPBasicAuthFilter("api", "my-key"));
 			    
@@ -41,7 +42,7 @@ public class BudgetEmailSender extends Thread{
 			formData.add("to", to);
 			String title ="Budget "+budget.getString("name")+" Summary";
 			formData.add("subject", title);
-			InputStream in = getClass().getResourceAsStream("/emailHTML.html");
+			InputStream in = getClass().getResourceAsStream("/summaryHTML.html");
 			BufferedReader input = new BufferedReader(new InputStreamReader(in));
 			String emailToSend= new String();
 			String temp = input.readLine();
