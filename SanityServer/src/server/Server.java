@@ -250,6 +250,12 @@ public class Server extends WebSocketServer {
 				JSONObject returnMessage = budgetDao.sendBudgetSummary(budgetName, email);
 				sendMessagetoClient(conn, returnMessage);
 			}
+			else if(message1.equals("shareBudget")){
+				String email=JSONMessage.getJSONObject("information").getString("email");
+				String budgetName=JSONMessage.getJSONObject("information").getString("budgetName");
+				String emailShare=JSONMessage.getJSONObject("information").getString("emailShare");
+				Boolean success=budgetDao.shareBudget(email, budgetName, emailShare);
+			}
 		}catch(JSONException e){
 			
 			System.out.println(e.getMessage());

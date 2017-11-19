@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.omg.IOP.RMICustomMaxStreamFormat;
 
 public class BudgetDAO extends DAO{
 	CategoryDAO CateDao;
@@ -257,5 +258,112 @@ public class BudgetDAO extends DAO{
 			System.out.println("editBudgetDB Error");
 		}
 		return false;
+	}
+	
+	public Boolean shareBudget(String email,String budgetName,String emailShare){
+		
+		try{
+			User user=new User(emailShare);
+			Integer idShare=UserFindUserID(user);
+			if(idShare==-1){
+				System.out.println("cannot find user");
+				return false;
+			}
+			
+			Connection conn = getDBConnection();
+			PreparedStatement statement=conn.prepareStatement("SELECT * FROM SanityDB.Sanity_budget WHERE Email=? AND Budget_name=?");
+			statement.setString(1, email);
+			statement.setString(2, budgetName);
+			Integer oldId;
+			
+			ResultSet rs = statement.executeQuery();
+			if(rs.next()){
+				//copy budget
+				statement =  
+						conn.prepareStatement("INSERT INTO SanityDB.Budget (Budget_name, "
+								+ "User_id,Budget_period,Start_date,Budget_total,Budget_spent,Frequency, Threshold) VALUE(?,?,?,?,?,?,?,?)");
+				statement.setString( 1, rs.getString("Budget_name"));
+				statement.setInt( 2, idShare);
+				statement.setInt(3, rs.getInt("Budget_period"));
+				statement.setDate(4, java.sql.Date.valueOf( rs.getDate("Start_date").toString()));
+				statement.setDouble(5, rs.getDouble("Budget_total"));
+				statement.setDouble(6, 0);
+				statement.setInt(7,  rs.getInt("Frequency"));
+				statement.setInt(8, rs.getInt("Threshold"));
+				oldId=rs.getInt("Budget_id");
+				
+				statement.executeUpdate();	
+				
+			}
+			else{
+				System.out.println("cannot find budget");
+				return false;
+			}
+			
+			//find new budget id
+			Integer newId;
+			statement=conn.prepareStatement("SELECT * FROM SanityDB.Sanity_budget WHERE Email=? AND Budget_name=?");
+			statement.setString(1, emailShare);
+			statement.setString(2, budgetName);
+			rs = statement.executeQuery();
+			if(rs.next()){
+				newId=rs.getInt("Budget_id");
+			}
+			else{
+				System.out.println("cannot find new id");
+				return false;
+			}
+			//copy category
+			statement=conn.prepareStatement("SELECT * FROM SanityDB.Sanity_category WHERE Budget_name=? AND Email=?");
+			statement.setString(1, budgetName);
+			statement.setString(2, email);
+			rs=statement.executeQuery();
+			while(rs.next()){
+				statement = conn.prepareStatement("INSERT INTO SanityDB.Category(User_id, Category_name, Budget_id,"
+						+ "Category_total, Category_spent) VALUE(?,?,?,?,?)");
+				statement.setInt(1, idShare);
+				statement.setString(2,rs.getString("Category_name"));
+				statement.setInt(3, newId);
+				statement.setInt(4, rs.getInt("Category_total"));
+				statement.setInt(5,0);
+				
+				statement.executeUpdate();
+			}
+			//add in share
+			statement = conn.prepareStatement("SELECT * FROM  SanityDB.Share");
+			rs=statement.executeQuery();
+			Boolean find=false;
+			String oldIDString=oldId.toString();
+			while(rs.next()){
+				String group=rs.getString("Share_budget");
+				String[] groupSplit=group.split(",");
+				for(int i=0;i<groupSplit.length;i++){
+					if(groupSplit[i].equals(oldIDString)){
+						find=true;
+						String newgroup=group+","+newId.toString();
+						statement = conn.prepareStatement("UPDATE  SanityDB.Share SET Share_budget=? WHERE Share_id=?");
+						statement.setString(1, newgroup);
+						statement.setInt(2, rs.getInt("Share_id"));
+						statement.executeUpdate();
+					}
+				}
+				if(find==false){
+					String insert=oldIDString+","+newId.toString();
+					statement = conn.prepareStatement("INSERT INTO SanityDB.Share(Share_budget) VALUE(?)");
+					statement.setString(1, insert);
+					statement.executeUpdate();
+				}		
+			}
+			
+			
+		}catch(SQLException e){
+			System.out.println(e.getMessage());
+			System.out.println("sharebudgeterrror");
+			
+		}
+		
+		
+		return false;
+		
 	}
 }
