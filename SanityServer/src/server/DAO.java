@@ -333,6 +333,11 @@ public class DAO {
 				
 				String startDate = DateCal.calculateCurrentStart(start, temp.getInt("period"),0);
 				String endDate = DateCal.getEndDate(startDate, temp.getInt("period"));
+				
+				if(period==0){
+					endDate=DateCal.today();
+				}
+				
 				long remain =DateCal.getRemian(endDate);
 				temp.put("remain", remain);
 				temp.put("startDate", startDate);
