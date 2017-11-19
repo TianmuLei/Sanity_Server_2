@@ -108,7 +108,6 @@ public class Server extends WebSocketServer {
 					JSONObject info=budgetDao.getEverything(user, 0);
 					returnMessage.put("information", info.getJSONObject("information"));
 				}
-				
 				sendMessagetoClient(conn,returnMessage);
 			}
 			else if (message1.equals("addTransaction")){
@@ -121,7 +120,7 @@ public class Server extends WebSocketServer {
 				}
 				sendMessagetoClient(conn, returnMessage);
 			}
-			else if(message1.equals("requestBudgetList")){
+			else if(message1.equals("requestBudgetList")){//deplete
 				User user = new User(JSONMessage.getJSONObject("information").getString("email"));
 				JSONObject returnMessage = budgetDao.getBudgetList(user);
 				sendMessagetoClient(conn, returnMessage);

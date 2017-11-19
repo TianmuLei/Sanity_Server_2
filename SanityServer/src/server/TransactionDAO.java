@@ -15,7 +15,7 @@ public class TransactionDAO extends DAO{
 		try{
 			JSONObject message = new JSONObject();
 			message.put("function", "createTransaction");// we need give more info to this message	
-			if(checkTransactionExist(toAdd)){
+			if(checkTransactionExistNew(toAdd)){
 				message.put("status", "fail");
 				message.put("detail", "same transaction alrealy exist");
 			}
@@ -108,7 +108,61 @@ public class TransactionDAO extends DAO{
 		}
 		return returnMessage;
 	}
-	
+	public Boolean checkTransactionExistNew(Transaction toAdd) throws SQLException{
+		Connection conn =getDBConnection();
+		PreparedStatement findID = conn.prepareStatement("SELECT * FROM SanityDB.Sanity_category WHERE "
+				+ "Email=? AND Budget_name=? AND Category_name=?");
+		findID.setString(1, toAdd.email);
+		findID.setString(2, toAdd.budget);
+		findID.setString(3, toAdd.category);
+		try{
+			ResultSet resultSet= findID.executeQuery();
+			if(resultSet.next()){
+				toAdd.userID=resultSet.getInt("User_id");
+				toAdd.budgetID=resultSet.getInt("Budget_id");
+				toAdd.categoryID=resultSet.getInt("Category_id");
+			}
+			if(resultSet!=null){
+				resultSet.close();
+			}
+		}catch (SQLException e) {
+			System.out.println("SQLException in checkTransactionExistNew");
+			System.out.println(e.getMessage());
+		}finally{
+			if(findID!=null){
+				findID.close();
+			}
+		}
+		PreparedStatement findTransaction = conn.prepareStatement("SELECT * FROM SanityDB.Transaction WHERE "
+				+ "Transaction_description=? AND User_id=? AND Transaction_amount=? AND Transaction_date=?"
+				+ "AND Budget_id=? AND Category_id=?");
+		findTransaction.setString(1, toAdd.description);
+		findTransaction.setInt(2, toAdd.userID);
+		findTransaction.setDouble(3, toAdd.amount);
+		findTransaction.setDate(4,java.sql.Date.valueOf(toAdd.date));
+		findTransaction.setInt(5, toAdd.budgetID);
+		findTransaction.setInt(6, toAdd.categoryID);
+		try{
+			ResultSet rs = findTransaction.executeQuery();
+			if(rs.next()){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}catch(SQLException e){
+			System.out.println(e.getMessage());
+			System.out.println("check transaction error ");
+		}finally{
+			if(findTransaction!=null){
+				findTransaction.close();
+			}
+			if(conn!=null){
+				conn.close();
+			}
+		}
+		return false;
+	}
 	public Boolean checkTransactionExist(Transaction toAdd) throws SQLException{
 		Connection conn= getDBConnection();
 		TransactionFindUserID(toAdd);
