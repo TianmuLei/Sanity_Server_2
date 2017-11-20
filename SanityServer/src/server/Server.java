@@ -261,7 +261,6 @@ public class Server extends WebSocketServer {
 				
 				JSONObject returnMessage = new JSONObject();
 				returnMessage.put("function", "shareBudget");
-				
 				if(success){
 					returnMessage.put("status", "success");
 				}
@@ -269,7 +268,19 @@ public class Server extends WebSocketServer {
 					returnMessage.put("status", "fail");
 				}
 				sendMessagetoClient(conn, returnMessage);
-	
+			}
+			else if(message1.equals("editTransaction")){
+				
+			}
+			else if(message1.equals("deleteTransaction")){
+				Transaction toDelete = new Transaction(JSONMessage.getJSONObject("information"));
+				JSONObject returnMessage =transactionDao.deleteTransaction(toDelete);
+				if(returnMessage.getString("status").equals("success")){
+					JSONObject info=budgetDao.getEverything(new User(toDelete.email), 0);
+					returnMessage.put("information", info.getJSONObject("information"));
+				}
+				sendMessagetoClient(conn, returnMessage);
+				
 			}
 		}catch(JSONException e){
 			

@@ -59,15 +59,10 @@ public class TransactionDAO extends DAO{
 					System.out.println("email"+newEmail);
 					createTransaction(toAdd);
 				}
-			}
-			
-			
+			}	
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
 		}
-		
-		
-		
 	}
 	
 	public JSONObject getTransactions(User user, Budget budget, Category category){
@@ -112,19 +107,23 @@ public class TransactionDAO extends DAO{
 		JSONObject returnMessage = new JSONObject();
 		try{
 			returnMessage.put("function", "deleteTransaction");
-			TransactionFindUserID(transaction);
-			TransactionFindBudgetID(transaction);
-			TransactionFindCategoryID(transaction);
 			Connection conn=getDBConnection();
+			PreparedStatement findID =conn.prepareStatement("SELECT FROM SanityDB.SanityDB_transaction WHERE Transaction_description=? "
+					+ "AND Email=? AND Transaction_amount=? AND Transaction_date=? AND Budget_name=? AND Category_name=? ");
+			findID.setString(1, transaction.description);
+			findID.setString(2, transaction.email);
+			findID.setDouble(3, transaction.amount);
+			findID.setDate(4,java.sql.Date.valueOf(transaction.date));
+			findID.setString(5, transaction.budget);
+			findID.setString(6, transaction.category);
+			ResultSet rs=findID.executeQuery();
+			Integer transactionID =-1;
+			if(rs.next()){
+				transactionID=rs.getInt("Transaction_id");
+			}
 			PreparedStatement statement= conn.prepareStatement("DELETE FROM SanityDB.Transaction WHERE "
-					+ "Transaction_description=? AND User_id =? AND Transaction_amount=? AND Transaction_date=?"
-					+ "AND Budget_id=? AND Category_id=?");
-			statement.setString(1, transaction.description);
-			statement.setInt(2, transaction.userID);
-			statement.setDouble(3, transaction.amount);
-			statement.setDate(4,java.sql.Date.valueOf(transaction.date));
-			statement.setInt(5, transaction.budgetID);
-			statement.setInt(6, transaction.categoryID);
+					+ "Transaction_id=?");
+			statement.setInt(1, transactionID);
 			statement.executeUpdate();
 			if(statement!=null){
 				statement.close();
@@ -132,8 +131,6 @@ public class TransactionDAO extends DAO{
 			if(conn!=null){
 				conn.close();
 			}
-			transaction.amount =transaction.amount*-1;
-			updateDB(transaction);
 			returnMessage.put("status", "success");
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
