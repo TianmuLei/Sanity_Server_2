@@ -108,7 +108,7 @@ public class TransactionDAO extends DAO{
 		try{
 			returnMessage.put("function", "deleteTransaction");
 			Connection conn=getDBConnection();
-			PreparedStatement findID =conn.prepareStatement("SELECT FROM SanityDB.SanityDB_transaction WHERE Transaction_description=? "
+			PreparedStatement findID =conn.prepareStatement("SELECT * FROM SanityDB.Sanity_transaction WHERE Transaction_description=? "
 					+ "AND Email=? AND Transaction_amount=? AND Transaction_date=? AND Budget_name=? AND Category_name=? ");
 			findID.setString(1, transaction.description);
 			findID.setString(2, transaction.email);
