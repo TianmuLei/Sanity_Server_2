@@ -120,8 +120,6 @@ public class Server extends WebSocketServer {
 				}
 				sendMessagetoClient(conn, returnMessage);
 				transactionDao.duplicateTransaction(toAdd);
-				
-				
 			}
 			else if(message1.equals("requestBudgetList")){//deplete
 				User user = new User(JSONMessage.getJSONObject("information").getString("email"));
@@ -274,12 +272,14 @@ public class Server extends WebSocketServer {
 						info.getString("newDate"),info.getDouble("newAmount"));
 				JSONObject messageDelete = transactionDao.deleteTransaction(toDelete);
 				JSONObject messageAdd = transactionDao.createTransaction(toAdd);
+				System.out.println("finish add and delete");
 				if(messageDelete.getString("status").equals("success")&&messageAdd.getString("status").equals("success")){
 					JSONObject returnMessage = new JSONObject();
 					returnMessage.put("function", "editTransaction");
 					returnMessage.put("status", "success");
 					JSONObject infomation=budgetDao.getEverything(new User(toDelete.email), 0);
 					returnMessage.put("information", infomation.getJSONObject("information"));
+					sendMessagetoClient(conn, returnMessage);
 				}			
 			}
 			else if(message1.equals("deleteTransaction")){
