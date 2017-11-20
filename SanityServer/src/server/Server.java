@@ -141,11 +141,6 @@ public class Server extends WebSocketServer {
 				JSONObject returnMessage = transactionDao.getTransactions(user,budget, category);
 				sendMessagetoClient(conn, returnMessage);
 			}
-			else if(message1.equals("deleteTransaction")){
-				Transaction transaction = new Transaction(JSONMessage.getJSONObject("information"));
-				JSONObject returnMessage = transactionDao.deleteTransaction(transaction);
-				sendMessagetoClient(conn, returnMessage);
-			}
 			else if(message1.equals("requestEverything")){
 				User user= new User(JSONMessage.getJSONObject("information").getString("email"));
 				JSONObject returnMessage=budgetDao.getEverything(user, 0);
@@ -279,7 +274,7 @@ public class Server extends WebSocketServer {
 						info.getString("newDate"),info.getDouble("newAmount"));
 				JSONObject messageDelete = transactionDao.deleteTransaction(toDelete);
 				JSONObject messageAdd = transactionDao.createTransaction(toAdd);
-				if(messageDelete.getString("status").equals("sucess")&&messageAdd.getString("status").equals("success")){
+				if(messageDelete.getString("status").equals("success")&&messageAdd.getString("status").equals("success")){
 					JSONObject returnMessage = new JSONObject();
 					returnMessage.put("function", "editTransaction");
 					returnMessage.put("status", "success");
@@ -290,16 +285,17 @@ public class Server extends WebSocketServer {
 			else if(message1.equals("deleteTransaction")){
 				Transaction toDelete = new Transaction(JSONMessage.getJSONObject("information"));
 				JSONObject returnMessage =transactionDao.deleteTransaction(toDelete);
+				System.out.println("finish delete transaction");
 				if(returnMessage.getString("status").equals("success")){
 					JSONObject info=budgetDao.getEverything(new User(toDelete.email), 0);
 					returnMessage.put("information", info.getJSONObject("information"));
-				}
-				sendMessagetoClient(conn, returnMessage);	
+					System.out.println("put information in the message");
+					sendMessagetoClient(conn, returnMessage);
+				}	
 			}
 		}catch(JSONException e){
 			System.out.println(e.getMessage());
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
