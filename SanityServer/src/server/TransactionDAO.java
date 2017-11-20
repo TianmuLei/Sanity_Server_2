@@ -34,6 +34,42 @@ public class TransactionDAO extends DAO{
 		return null;
 	}
 	
+	public void duplicateTransaction(Transaction toAdd){
+		try{
+			checkTransactionExistNew(toAdd);
+			Integer budgetID=toAdd.budgetID;
+			
+			String result=findShare(budgetID);
+			
+			
+			String[] resultInd=result.split(",");
+			for(int i=0;i<resultInd.length;i++){
+				if(!resultInd[i].equals(budgetID.toString())){
+					Connection conn = getDBConnection();
+					int newID=Integer.parseInt(resultInd[i]);
+					System.out.println(newID);
+					PreparedStatement statement=conn.prepareStatement("SELECT * FROM SanityDB.Sanity_budget WHERE Budget_id=?");
+					statement.setInt(1, newID);
+					ResultSet rs=statement.executeQuery();
+					String newEmail="";
+					if(rs.next()){
+						newEmail=rs.getString("Email");
+					}
+					toAdd.email=newEmail;
+					System.out.println("email"+newEmail);
+					createTransaction(toAdd);
+				}
+			}
+			
+			
+		}catch(SQLException e){
+			System.out.println(e.getMessage());
+		}
+		
+		
+		
+	}
+	
 	public JSONObject getTransactions(User user, Budget budget, Category category){
 		JSONObject returnMessage = new JSONObject();
 		try{

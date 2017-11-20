@@ -347,18 +347,32 @@ public class BudgetDAO extends DAO{
 						statement.executeUpdate();
 					}
 				}
-				if(find==false){
-					String insert=oldIDString+","+newId.toString();
-					statement = conn.prepareStatement("INSERT INTO SanityDB.Share(Share_budget) VALUE(?)");
-					statement.setString(1, insert);
-					statement.executeUpdate();
-				}		
+					
 			}
+			if(find==false){
+				String insert=oldIDString+","+newId.toString();
+				statement = conn.prepareStatement("INSERT INTO SanityDB.Share(Share_budget) VALUE(?)");
+				statement.setString(1, insert);
+				statement.executeUpdate();
+			}	
 			
+			if(statement!=null){
+				statement.close();
+			}
+			if(conn!=null){
+				conn.close();
+			}
+			if(rs!=null){
+				rs.close();
+			}
+			return true;
 			
 		}catch(SQLException e){
 			System.out.println(e.getMessage());
 			System.out.println("sharebudgeterrror");
+			
+		}
+		finally{
 			
 		}
 		

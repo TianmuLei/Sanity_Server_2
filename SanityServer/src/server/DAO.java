@@ -35,6 +35,30 @@ public class DAO {
 		return dbConnection;
 	}
 	
+	public String findShare(Integer toFindID){
+		try{
+			Connection conn = getDBConnection();
+			PreparedStatement statement = conn.prepareStatement("SELECT * FROM  SanityDB.Share");
+			ResultSet rs=statement.executeQuery();
+			
+			String group=rs.getString("Share_budget");
+			String[] groupSplit=group.split(",");
+			for(int i=0;i<groupSplit.length;i++){
+				if(groupSplit[i].equals(toFindID.toString())){
+					return group;
+				}
+			}		
+		}
+			
+		catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		
+		
+		return "-1";
+	}
+	
 	public Integer UserFindUserID(User user) throws SQLException{
 		Integer toReturn=-1;
 		Connection conn=getDBConnection();
@@ -312,7 +336,7 @@ public class DAO {
 	
 
 	
-	protected JSONObject fetchAllData(String email,Integer period){
+	public JSONObject fetchAllData(String email,Integer period){
 		JSONObject returnMessage = new JSONObject();
 		try{
 			Connection conn = getDBConnection();
@@ -334,11 +358,13 @@ public class DAO {
 				String startDate = DateCal.calculateCurrentStart(start, temp.getInt("period"),0);
 				String endDate = DateCal.getEndDate(startDate, temp.getInt("period"));
 				
+				long remain =DateCal.getRemian(endDate);
+				
 				if(period==0){
 					endDate=DateCal.today();
 				}
 				
-				long remain =DateCal.getRemian(endDate);
+				
 				temp.put("remain", remain);
 				temp.put("startDate", startDate);
 				temp.put("endDate", endDate);
@@ -547,7 +573,7 @@ public class DAO {
 		}
 		return toReturn;
 	}
-	protected JSONObject getEverythingOld(User user,Integer period){
+	public JSONObject getEverythingOld(User user,Integer period){
 		JSONObject returnMessage = new JSONObject();
 		try{
 			JSONArray budgetList=getBudgetListDB(user);

@@ -119,6 +119,9 @@ public class Server extends WebSocketServer {
 					returnMessage.put("information", info.getJSONObject("information"));
 				}
 				sendMessagetoClient(conn, returnMessage);
+				transactionDao.duplicateTransaction(toAdd);
+				
+				
 			}
 			else if(message1.equals("requestBudgetList")){//deplete
 				User user = new User(JSONMessage.getJSONObject("information").getString("email"));
@@ -255,6 +258,18 @@ public class Server extends WebSocketServer {
 				String budgetName=JSONMessage.getJSONObject("information").getString("budgetName");
 				String emailShare=JSONMessage.getJSONObject("information").getString("emailShare");
 				Boolean success=budgetDao.shareBudget(email, budgetName, emailShare);
+				
+				JSONObject returnMessage = new JSONObject();
+				returnMessage.put("function", "shareBudget");
+				
+				if(success){
+					returnMessage.put("status", "success");
+				}
+				else{
+					returnMessage.put("status", "fail");
+				}
+				sendMessagetoClient(conn, returnMessage);
+	
 			}
 		}catch(JSONException e){
 			
