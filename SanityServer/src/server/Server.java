@@ -270,7 +270,22 @@ public class Server extends WebSocketServer {
 				sendMessagetoClient(conn, returnMessage);
 			}
 			else if(message1.equals("editTransaction")){
-				
+				JSONObject info = JSONMessage.getJSONObject("information");
+				Transaction toDelete = new Transaction(info.getString("email"),
+						info.getString("oldDescription"),info.getString("oldCategory"),info.getString("oldBudget"),
+						info.getString("oldDate"),info.getDouble("oldAmount"));
+				Transaction toAdd = new Transaction(info.getString("email"),
+						info.getString("newDescription"),info.getString("newCategory"),info.getString("newBudget"),
+						info.getString("newDate"),info.getDouble("newAmount"));
+				JSONObject messageDelete = transactionDao.deleteTransaction(toDelete);
+				JSONObject messageAdd = transactionDao.createTransaction(toAdd);
+				if(messageDelete.getString("status").equals("sucess")&&messageAdd.getString("status").equals("success")){
+					JSONObject returnMessage = new JSONObject();
+					returnMessage.put("function", "editTransaction");
+					returnMessage.put("status", "success");
+					JSONObject infomation=budgetDao.getEverything(new User(toDelete.email), 0);
+					returnMessage.put("information", infomation.getJSONObject("information"));
+				}			
 			}
 			else if(message1.equals("deleteTransaction")){
 				Transaction toDelete = new Transaction(JSONMessage.getJSONObject("information"));
@@ -279,11 +294,9 @@ public class Server extends WebSocketServer {
 					JSONObject info=budgetDao.getEverything(new User(toDelete.email), 0);
 					returnMessage.put("information", info.getJSONObject("information"));
 				}
-				sendMessagetoClient(conn, returnMessage);
-				
+				sendMessagetoClient(conn, returnMessage);	
 			}
 		}catch(JSONException e){
-			
 			System.out.println(e.getMessage());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

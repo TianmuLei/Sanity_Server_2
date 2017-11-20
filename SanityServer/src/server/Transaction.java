@@ -26,6 +26,6 @@ public class Transaction {
 		this.category = category;
 		this.budget = budget;
 		this.date = date;
-		 this.amount = amound;
+		this.amount = amound;
 	}
 }
