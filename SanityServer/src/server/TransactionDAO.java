@@ -38,6 +38,7 @@ public class TransactionDAO extends DAO{
 		try{
 			checkTransactionExistNew(toAdd);
 			Integer budgetID=toAdd.budgetID;
+			System.out.println(budgetID);
 			
 			String result=findShare(budgetID);
 			

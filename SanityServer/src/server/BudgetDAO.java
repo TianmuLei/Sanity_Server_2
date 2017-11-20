@@ -329,6 +329,34 @@ public class BudgetDAO extends DAO{
 				
 				statement.executeUpdate();
 			}
+			//copy transaction
+			statement= conn.prepareStatement("SELECT * FROM SanityDB.Sanity_transaction WHERE Budget_name=? AND Email=?");
+			statement.setString(1, budgetName);
+			statement.setString(2, email);
+			rs=statement.executeQuery();
+			while(rs.next()){
+				statement=conn.prepareStatement("SELECT * FROM SanityDB.Sanity_category WHERE Budget_name=? AND Email=? AND Category_name=?");
+				statement.setString(1, budgetName);
+				statement.setString(2, emailShare);
+				statement.setString(3, rs.getString("Category_name"));
+				Integer cateID=-1;
+				ResultSet rs2=statement.executeQuery();
+				if(rs2.next()){
+					cateID=rs2.getInt("Category_id");
+				}
+				statement=conn.prepareStatement("INSERT INTO SanityDB.Transaction (Transaction_description, "
+						+ "User_id, Transaction_amount, Transaction_date,Budget_id,Category_id) VALUE (?,?,?,?,?,?)");
+				statement.setString(1, rs.getString("Transaction_description"));
+				statement.setInt(2, idShare);
+				statement.setDouble(3, rs.getDouble("Transaction_amount"));
+				statement.setDate(4, java.sql.Date.valueOf(rs.getDate("Transaction_date").toString()));
+				statement.setInt(5,newId);
+				statement.setInt(6, cateID);
+				statement.executeUpdate();
+				
+			}
+			
+			
 			//add in share
 			statement = conn.prepareStatement("SELECT * FROM  SanityDB.Share");
 			rs=statement.executeQuery();

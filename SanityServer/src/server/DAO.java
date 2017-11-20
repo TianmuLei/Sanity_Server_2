@@ -40,14 +40,16 @@ public class DAO {
 			Connection conn = getDBConnection();
 			PreparedStatement statement = conn.prepareStatement("SELECT * FROM  SanityDB.Share");
 			ResultSet rs=statement.executeQuery();
+			while(rs.next()){
+				String group=rs.getString("Share_budget");
+				String[] groupSplit=group.split(",");
+				for(int i=0;i<groupSplit.length;i++){
+					if(groupSplit[i].equals(toFindID.toString())){
+						return group;
+					}
+				}		
+			}
 			
-			String group=rs.getString("Share_budget");
-			String[] groupSplit=group.split(",");
-			for(int i=0;i<groupSplit.length;i++){
-				if(groupSplit[i].equals(toFindID.toString())){
-					return group;
-				}
-			}		
 		}
 			
 		catch (SQLException e) {
