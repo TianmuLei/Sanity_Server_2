@@ -16,7 +16,7 @@ public class DAO {
 		Connection dbConnection = null;
 		if(testing != 1){
 			try {
-				return dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/SanityDB?user=root&password=developer&useSSL=false");
+				return dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/SanityDB?user=root&password=chenyang&useSSL=false");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -579,7 +579,7 @@ public class DAO {
 		JSONObject returnMessage = new JSONObject();
 		try{
 			JSONArray budgetList=getBudgetListDB(user);
-			System.out.println(budgetList.length());
+			//System.out.println(budgetList.length());
 			for(int i=0;i<budgetList.length();++i){
 				JSONObject budgetJSON=budgetList.getJSONObject(i);
 				Budget budget=new Budget(budgetJSON,period);
