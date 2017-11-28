@@ -16,7 +16,7 @@ public class DAO {
 		Connection dbConnection = null;
 		if(testing != 1){
 			try {
-				return dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/SanityDB?user=root&password=chenyang&useSSL=false");
+				return dbConnection = DriverManager.getConnection("jdbc:mysql://localhost/SanityDB?user=root&password=developer&useSSL=false");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -418,6 +418,12 @@ public class DAO {
 					Integer budgetPeriod = budget.getInt("period");
 					String startDate=DateCal.calculateCurrentStart(date, budgetPeriod, period);
 					String endDate =DateCal.getEndDate(startDate, budgetPeriod);
+					
+					if(period==0){
+						endDate=DateCal.today();
+					}
+					
+					
 					getTransaction.setDate(4, java.sql.Date.valueOf(startDate));
 					getTransaction.setDate(5,java.sql.Date.valueOf(endDate));
 					ResultSet transactions=getTransaction.executeQuery();

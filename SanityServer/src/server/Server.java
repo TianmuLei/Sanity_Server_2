@@ -293,6 +293,28 @@ public class Server extends WebSocketServer {
 					sendMessagetoClient(conn, returnMessage);
 				}	
 			}
+			else if(message1.equals("forgetPassword")){
+				JSONObject info=JSONMessage.getJSONObject("information");
+				String email=info.getString("email");
+				userDao.ForgetPassword(email);
+			}
+			else if(message1.equals("forgetChangePassword")){
+				JSONObject info=JSONMessage.getJSONObject("information");
+				Boolean success=userDao.forgetChangePassword(info.getString("email"), info.getInt("code"), 
+						info.getString("password1"), info.getString("password2"));
+				
+				JSONObject returnMessage = new JSONObject();
+				returnMessage.put("function", "forgetChangePassword");
+				if(success){
+					returnMessage.put("status", "success");
+				}
+				else{
+					returnMessage.put("status", "fail");
+				}
+				sendMessagetoClient(conn, returnMessage);
+				
+				
+			}
 		}catch(JSONException e){
 			System.out.println(e.getMessage());
 		} catch (SQLException e) {

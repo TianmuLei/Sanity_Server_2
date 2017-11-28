@@ -32,7 +32,7 @@ public class RegisterEmailSender extends Thread{
 	public void run() {
 		super.run();
 		Client client = Client.create();
-		client.addFilter(new HTTPBasicAuthFilter("api", "my-key"));
+		client.addFilter(new HTTPBasicAuthFilter("api", "key-59d73d0d606d0df987743b0c84305aaf"));
 		    
 		WebResource webResource = client.resource("https://api.mailgun.net/v3/sandbox1a3192acb7454b4cbe565ad1ee6369e4.mailgun.org/messages");
 		MultivaluedMapImpl formData = new MultivaluedMapImpl();

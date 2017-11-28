@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Random;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -195,6 +196,43 @@ public class UserDAO extends DAO{
 			}	
 		}
 		return message;		
+	}
+	public void ForgetPassword(String email) throws SQLException{
+		Random generator = new Random();
+		Integer code=100000 + generator.nextInt(900000);
+		Connection conn=getDBConnection();
+		PreparedStatement st =  
+				conn.prepareStatement("INSERT INTO SanityDB.Forget (Email, Code) VALUE (?,?)");
+		st.setString(1, email);
+		st.setInt(2, code);
+		st.executeUpdate();
+		
+		ForgetPasswordEmailSender sender = new ForgetPasswordEmailSender(code.toString(), email);
+		sender.start();
+		
+		if(conn!=null){
+			conn.close();
+		}
+		
+	}
+	public boolean forgetChangePassword(String email,Integer code,String pw1,String pw2) throws SQLException{
+		Connection conn=getDBConnection();
+		PreparedStatement st = conn.prepareStatement("SELECT * FROM SanityDB.Forget WHERE Email=? AND Code=?");
+		st.setString(1, email);
+		st.setInt(2, code);
+		ResultSet rs=st.executeQuery();
+		if(rs.next()){
+			st = conn.prepareStatement("UPDATE SanityDB.User SET Password1= ?,Password2 = ? WHERE Email = ?");
+			st.setString( 1, pw1);
+			st.setString( 2, pw2);
+			st.setString( 3, email);
+			st.executeUpdate();
+			return true;
+		}
+		
+		
+		return false;
+		
 	}
 }
 	

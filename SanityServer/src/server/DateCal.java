@@ -77,8 +77,9 @@ public class DateCal {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar today = Calendar.getInstance();
 		
-		
+		//return "2017-12-1";
 		return sdf.format(today.getTime());
+		
 	}
 	public static String getEndDate(String startSate,Integer period){
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

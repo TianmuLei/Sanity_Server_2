@@ -43,7 +43,7 @@ public class DAOPerformanceTest {
 	public void testGetEverythingOld() {
 		long startTime = System.currentTimeMillis();
 		User toadd = new User("yang", "yang@usc.edu", "123", "456");
-		for(int i = 0; i < 100; i ++ ){
+		for(int i = 0; i < 10; i ++ ){
 			//tests.getEverythingOld(toadd, 0);
 			tests.fetchAllData("chen716@usc.edu", 0);
 		}
@@ -52,7 +52,7 @@ public class DAOPerformanceTest {
 		long time1 = endTime - startTime;
 		startTime = System.currentTimeMillis();
 		
-		for(int i = 0; i < 100; i ++ ){
+		for(int i = 0; i < 10; i ++ ){
 			tests.getEverythingOld(toadd, 0);
 			//tests.fetchAllData("chen716@usc.edu", 0);
 		}
