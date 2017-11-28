@@ -112,6 +112,8 @@ public class Server extends WebSocketServer {
 			}
 			else if (message1.equals("addTransaction")){
 				Transaction toAdd = new Transaction(JSONMessage.getJSONObject("information"));
+				toAdd.lat=JSONMessage.getJSONObject("information").getDouble("lat");
+				toAdd.longi=JSONMessage.getJSONObject("information").getDouble("longi");
 				JSONObject returnMessage = transactionDao.createTransaction(toAdd);
 				User user = new User(JSONMessage.getJSONObject("information").getString("email"));
 				if(returnMessage.getString("status").equals("success")){

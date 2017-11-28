@@ -435,6 +435,8 @@ public class DAO {
 						temp.put("date", transactions.getDate("Transaction_date").toString());
 						temp.put("budgetName", transactions.getString("Budget_name"));
 						temp.put("categoryName", transactions.getString("Category_name"));
+						temp.put("lat", transactions.getString("Lat"));
+						temp.put("longi", transactions.getString("Long"));
 						transactionList.put(temp);
 					}
 					category.put("transactionList", transactionList);

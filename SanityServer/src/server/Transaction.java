@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 public class Transaction {
 	String email, description, category, budget, date;
-	Double amount;
+	Double amount,longi,lat;
 	Integer userID=-1, budgetID=-1, categoryID=-1;
 	public Transaction(JSONObject message){
 		try{
