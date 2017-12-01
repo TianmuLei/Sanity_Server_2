@@ -422,6 +422,10 @@ public class DAO {
 					if(period==0){
 						endDate=DateCal.today();
 					}
+					if(period==7){
+						endDate=DateCal.today();
+						startDate=DateCal.calculateCurrentStart(date, budgetPeriod, 6);
+					}
 					
 					
 					getTransaction.setDate(4, java.sql.Date.valueOf(startDate));
@@ -435,8 +439,8 @@ public class DAO {
 						temp.put("date", transactions.getDate("Transaction_date").toString());
 						temp.put("budgetName", transactions.getString("Budget_name"));
 						temp.put("categoryName", transactions.getString("Category_name"));
-						temp.put("lat", transactions.getString("Lat"));
-						temp.put("longi", transactions.getString("Long"));
+						temp.put("lat", transactions.getDouble("Lat"));
+						temp.put("longi", transactions.getDouble("Longi"));
 						transactionList.put(temp);
 					}
 					category.put("transactionList", transactionList);

@@ -235,7 +235,7 @@ public class TransactionDAO extends DAO{
 	private void addTransactionDB(Transaction toAdd) throws SQLException{
 		Connection conn= getDBConnection();
 		PreparedStatement insert = conn.prepareStatement("INSERT INTO SanityDB.Transaction (Transaction_description, "
-				+ "User_id, Transaction_amount, Transaction_date,Budget_id,Category_id,Long,Lat) VALUE (?,?,?,?,?,?,?,?)");
+				+ "User_id, Transaction_amount, Transaction_date,Budget_id,Category_id,Longi,Lat) VALUE (?,?,?,?,?,?,?,?)");
 		insert.setString(1, toAdd.description);
 		insert.setInt(2, toAdd.userID);
 		insert.setDouble(3, toAdd.amount);
@@ -248,6 +248,7 @@ public class TransactionDAO extends DAO{
 			insert.executeUpdate();
 		}catch(SQLException e){
 			System.out.println("insert transaction error ");
+			System.out.println(e.getMessage());
 		}finally{
 			if(insert!=null){
 				insert.close();

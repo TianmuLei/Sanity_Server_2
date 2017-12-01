@@ -165,6 +165,7 @@ public class Server extends WebSocketServer {
 				JSONObject returnMessage4=budgetDao.getEverything(user, 4);
 				JSONObject returnMessage5=budgetDao.getEverything(user, 5);
 				JSONObject returnMessage6=budgetDao.getEverything(user, 6);
+				JSONObject returnMessage7=budgetDao.getEverything(user, 7);
 				JSONObject messagenew= new JSONObject();
 				messagenew.put("function", "requestHistory");
 				messagenew.put("status", "success");
@@ -174,6 +175,7 @@ public class Server extends WebSocketServer {
 				messagenew.put("information4", returnMessage4.getJSONObject("information"));
 				messagenew.put("information5", returnMessage5.getJSONObject("information"));
 				messagenew.put("information6", returnMessage6.getJSONObject("information"));
+				messagenew.put("information7", returnMessage7.getJSONObject("information"));
 				sendMessagetoClient(conn,messagenew);
 			}
 			else if(message1.equals("editBudget")){
